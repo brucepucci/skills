@@ -22,6 +22,21 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 [Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)
 
+## Personal Pi selection
+
+[`enabled-skills.json`](./enabled-skills.json) is this fork's explicit selection
+for the [dotfiles configuration](https://github.com/brucepucci/dotfiles). It lists
+27 skill directories, relative to this repository's root. To change the selection,
+add or remove a directory path; an empty array selects none.
+
+With this checkout at `~/gh/skills`, `chezmoi apply` in the dotfiles setup reads
+the manifest and configures Pi to load those directories directly. Run `/reload`
+in Pi after applying selection changes. Edits to an already selected skill need
+only `/reload`, including uncommitted local edits. The dotfiles setup neither
+copies skills nor installs packages, pulls Git changes, or updates this checkout.
+Clone and synchronize the fork yourself. Missing or invalid manifest paths fail
+apply clearly. Other agents' installation routes below are unchanged.
+
 ## Installation (30-second setup)
 
 A plugin updates itself. [skills.sh](https://skills.sh/mattpocock/skills) copies editable files into your project, and you update them by hand. Pick one per agent, because installing both gives you every skill twice.
