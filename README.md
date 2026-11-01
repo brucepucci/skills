@@ -29,13 +29,17 @@ for the [dotfiles configuration](https://github.com/brucepucci/dotfiles). It lis
 27 skill directories, relative to this repository's root. To change the selection,
 add or remove a directory path; an empty array selects none.
 
-With this checkout at `~/gh/skills`, `chezmoi apply` in the dotfiles setup reads
-the manifest and configures Pi to load those directories directly. Run `/reload`
-in Pi after applying selection changes. Edits to an already selected skill need
-only `/reload`, including uncommitted local edits. The dotfiles setup neither
-copies skills nor installs packages, pulls Git changes, or updates this checkout.
-Clone and synchronize the fork yourself. Missing or invalid manifest paths fail
-apply clearly. Other agents' installation routes below are unchanged.
+Publish and merge content or selection changes to this fork's `main`, then run
+`chezmoi apply` and `/reload` in Pi. The dotfiles setup automatically fetches
+remote `main`, including this manifest, and loads selected directories from a
+commit-specific snapshot in `~/.cache/dotfiles/pi-skills/`. Fetch or validation
+failures block apply instead of silently using stale content. Settings previews
+also fetch main, but do not change active skill paths.
+
+Your development checkout at `~/gh/skills` is never read or modified by apply;
+its local branch and uncommitted changes are not installed. Keep cached snapshots
+unedited. No Skills CLI or package installation is involved in this personal
+workflow. Other agents' installation routes below are unchanged.
 
 ## Installation (30-second setup)
 
