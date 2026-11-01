@@ -10,7 +10,7 @@ You invoke this by typing `/ask-matt`; the agent won't reach for it on its own.
 
 | Your situation | What the router gives back |
 | --- | --- |
-| An idea, and no idea where to start | The head of the main flow, and whether the build is small enough to skip the spec |
+| An idea, and no idea where to start | The head of the main flow, and whether an existing issue has adequate requirements or needs spec work first |
 | Bugs and requests arriving from other people | The [triage](https://aihero.dev/skills-triage) on-ramp, and why [tickets](https://www.aihero.dev/ai-coding-dictionary/ticket) you generated yourself don't belong on it |
 | Two skills that look interchangeable | The line between them, and it is usually one concrete test rather than a matter of taste. [grill-me](https://aihero.dev/skills-grill-me) or [grill-with-docs](https://aihero.dev/skills-grill-with-docs) turns on whether you are in a working directory; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) or [wayfinder](https://aihero.dev/skills-wayfinder) turns on whether the effort fits one session |
 | A long session and a decision about the [context](https://www.aihero.dev/ai-coding-dictionary/context) | The ordered tree over the five options at a phase boundary |
@@ -26,7 +26,10 @@ The tracker-dependent routes (triage, `to-spec`, `to-tickets`, `implement`) assu
 
 The skill's leading word is **flow**, a path *through* the skills rather than a single skill. When you name your situation, the router places you at a step on a flow. That is a different answer from "here is the skill that matches your keywords". There are five kinds of route, and the skill itself describes them in full:
 
-- **The main flow**, idea to ship. Grill, spec, tickets, implement (one ticket at a time, or the whole task graph in parallel with [implement-spec](https://aihero.dev/skills-implement-spec)), review, then [retro](https://aihero.dev/skills-retro), which feeds what the build taught back into the agent's environment. It has two branches. One is a prototype detour, for when a question needs runnable code to settle it. The other is the spec-and-tickets split, which is only worth its cost when the build spans more than one session.
+- **The main flow**, idea to ship. Settle the idea, record issue-backed requirements, then build. [implement](https://aihero.dev/skills-implement) takes one explicitly selected issue through spec validation, a confirmed feature branch, verification, and a local commit with an unpushed issue handoff. Publication with [pr](https://aihero.dev/skills-pr) and review with [code-review](https://aihero.dev/skills-code-review) are separately chosen steps, not automatic continuations. [retro](https://aihero.dev/skills-retro) feeds what the build taught back into the agent's environment. The planning choices are:
+  - Use a prototype detour when a question needs runnable code to settle it.
+  - Split a larger spec into issues when the build spans sessions. The separate whole-spec [implement-spec](https://aihero.dev/skills-implement-spec) route is unchanged.
+  - For a small build, select one issue with adequate requirements; a manually authored spec works, but conversation alone does not.
 - **On-ramps**, for a situation that generates work and then merges onto the main flow: incoming bug reports, something broken, or an effort too foggy and too large to hold in one session.
 - **Codebase health**, upkeep rather than feature work. [improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture) surveys the code for deepening opportunities, and each one it finds re-enters the main flow as an idea.
 - **Standalones**, which sit off every flow and which you use on their own: the prototype, the questionnaire, the research run.
@@ -50,7 +53,7 @@ People often get two of these wrong, which is why the router gives the order and
 
 **Isn't there just a list of the skills in the right order?**
 
-People keep asking for one in the README. This skill is that list. A static table would say `wayfinder → to-spec → to-tickets → implement → code-review → retro` and be wrong for most situations. The important parts are the branches: is there a codebase, does the build span sessions, can talking settle this question. The cost is that the router is maintained by hand, so it lags behind the repo. `/grilling` shipped long before the router named it.
+People keep asking for one in the README. This skill is that list. A static table would miss the important branches: is there a codebase, does the build span sessions, can talking settle this question, and when do you want to publish or review the local work? `/implement` always needs a selected issue with adequate requirements, even for a small build. The cost is that the router is maintained by hand, so it lags behind the repo. `/grilling` shipped long before the router named it.
 
 **It told me half the skills aren't installed.**
 
