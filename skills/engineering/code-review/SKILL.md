@@ -13,7 +13,7 @@ Focused is the default. An explicit comprehensive or pre-merge request adds Corr
 
 This skill adds no hooks or CI automation. Reviewing a PR publishes by default; explicit draft-only overrides publication. Local input stays local even if the branch has a PR. Read-only review: suggest changes, leave working files and Git history untouched.
 
-The issue tracker should have been provided. If not, tell the user to run `/setup-matt-pocock-skills`.
+Use the configured tracker workflow when fetching referenced issues. If that workflow is needed but missing, tell the user to run `/setup-matt-pocock-skills`. A self-contained PR description does not require issue-tracker setup.
 
 ## 1. Pin the scope
 
@@ -43,14 +43,16 @@ Read reviewed source, spec, and standards from the pinned head (for example, `gi
 
 ## 2. Identify the spec
 
-Preserve this discovery order:
+**PR input, including draft-only:** use the fetched **PR description as the spec by default**, without asking permission or searching commit messages first. Snapshot the body used for review and name it as the source in the report. Follow requirement references in that description when needed to understand it; do not silently replace it with an unrelated issue or infer requirements from the implementation. An explicitly requested alternative spec overrides this default and must be named in the report. If the description is empty or only unfilled template placeholders, ask for the missing spec rather than pretending Spec passed. Skip only after the user confirms there is no spec.
+
+**Local input:** preserve the existing discovery order, even if an associated PR supplied the comparison base:
 
 1. Issue references in the reviewed commit messages, fetched through the configured tracker workflow.
 2. A spec path explicitly supplied by the user.
 3. A spec under `docs/`, `specs/`, or `.scratch/` matching the branch or feature.
 4. Ask where the spec is. Only if the user confirms there is none, skip Spec and report "no spec available".
 
-The PR description is context, not an automatic replacement spec. Distinguish spec guarantees from assumptions the spec leaves open.
+Distinguish spec guarantees from assumptions the spec leaves open. This skill consumes the spec; creating or rewriting a PR description is a separate workflow.
 
 ## 3. Identify standards
 

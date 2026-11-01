@@ -22,7 +22,12 @@ Select your model and reasoning level before invoking. Both modes keep that sele
 
 Git history must be available. PR review also requires an authenticated `gh` CLI and permission to submit reviews. The configured issue tracker supplies the workflow for fetching referenced requirements; use [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) when it is missing.
 
-The Spec axis looks for issue references in commits, an explicitly provided spec path, then matching files under `docs/`, `specs/`, or `.scratch/`. If nothing is found, it asks. Only your confirmation that no spec exists permits skipping that axis. PR descriptions are context, not an automatic substitute.
+| Review input | Spec source |
+| --- | --- |
+| PR number or URL, including draft-only | The PR description automatically, unless you explicitly request an alternative |
+| Local branch or commit | Issue references in commits, an explicitly provided spec path, then matching files under `docs/`, `specs/`, or `.scratch/` |
+
+A self-contained PR description needs no tracker setup. Requirement references are followed as needed. An empty or unfilled-template PR description, or a local review with no matching spec, prompts for the missing requirements. Only your confirmation that no spec exists permits skipping that axis.
 
 ## Separate axes, shared scope
 
@@ -49,6 +54,10 @@ Git does not reliably store the original branch name. The skill announces the se
 
 PR input produces one Comment review with new actionable findings inline and an overall summary in its body. Exact replacements may use GitHub suggestion blocks. Local input and explicit draft-only produce chat output without GitHub writes. Neither route edits source files.
 
+**Do I have to confirm that the PR description is the spec?**
+
+No. For a PR review, the description is the default spec. Keep the intended behavior and acceptance criteria there. This skill reads that description; writing or maintaining it remains a separate workflow. Local reviews retain their existing issue/path/file lookup.
+
 **Can an approval still include suggestions?**
 
 Yes. Optional naming improvements and possible smells do not block approval. Concrete bugs, unmet requirements, material regressions, and mandatory rule violations warrant a REQUEST CHANGES recommendation. That recommendation remains text, not a formal blocking review event. Missing evidence and skipped checks are visible qualifications.
@@ -72,9 +81,10 @@ They are evidence-backed recommendations, not proof. The skill checks findings a
 - Local and draft-only reviews never post to GitHub.
 - Repeated reviews account for replies and fixes without duplicating unchanged findings.
 - Separate axis summaries state skipped checks, missing requirements, and remaining blockers.
+- A PR review names the PR description as its spec without asking for permission, and notices description changes before publication.
 
 ## Where it fits
 
-This is a build-chain review step and a standalone review tool. [implement](https://aihero.dev/skills-implement) supplies built work; [retro](https://aihero.dev/skills-retro) turns review misses into environment improvements. [pr](https://aihero.dev/skills-pr) shapes PR descriptions but does not automatically make them the requirements source.
+This is a build-chain review step and a standalone review tool. [implement](https://aihero.dev/skills-implement) supplies built work; [retro](https://aihero.dev/skills-retro) turns review misses into environment improvements. [pr](https://aihero.dev/skills-pr) shapes PR descriptions; this review skill uses the description as its default requirements source. Changing PR creation to produce a spec is separate work.
 
 [ask-matt](https://aihero.dev/skills-ask-matt) routes across the whole set.
