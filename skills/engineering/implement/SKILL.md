@@ -15,7 +15,7 @@ Implement **one explicitly selected issue** from the repository's configured iss
 
 ## 2. Validate the spec
 
-Read [to-spec's spec definition](../to-spec/SKILL.md) as reference for the validation contract, not as an instruction to invoke it. Manually authored issues qualify. Judge substance, not authorship, literal headings, prose length, or an extensive story list; scale the detail to the change.
+Validate with the self-contained checklist below, based on the spec substance defined by `to-spec`. Installing or invoking `to-spec` is not required. Manually authored issues qualify. Judge substance, not authorship, literal headings, prose length, or an extensive story list; scale the detail to the change.
 
 Account for:
 

@@ -45,7 +45,7 @@ Requirements are fetched again before the final commit and handoff. Material cha
 
 **Does my issue have to come from `to-spec`?**
 
-No. A manually authored issue qualifies if its requirements are adequate. The validator checks substance, distinguishes irrelevant sections from unresolved decisions, and accepts linked parent requirements. Invoking `to-spec` is not mandatory.
+No. A manually authored issue qualifies if its requirements are adequate. The validator checks substance, distinguishes irrelevant sections from unresolved decisions, and accepts linked parent requirements. `implement` carries its own validation checklist, so neither installing nor invoking `to-spec` is required.
 
 **`/implement #2` worked on something unrelated. How do I avoid that?**
 
