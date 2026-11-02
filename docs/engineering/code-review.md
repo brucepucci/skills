@@ -16,7 +16,7 @@ Type `/code-review`, or the agent reaches for it when a review request fits. No 
 | Local branch feedback | `Review the current branch` |
 | Explicit comparison base | `Review this branch against release` |
 
-Select your model and reasoning level before invoking. Both modes keep that selection; comprehensive means additional coverage, not an automatic model change.
+Select your [model](https://www.aihero.dev/ai-coding-dictionary/model) and reasoning level before invoking. Both modes keep that selection; comprehensive means additional coverage, not an automatic model change.
 
 ## Prerequisites
 
@@ -24,10 +24,12 @@ Git history must be available. PR review also requires an authenticated `gh` CLI
 
 | Review input | Spec source |
 | --- | --- |
-| PR number or URL, including draft-only | The PR description automatically, unless you explicitly request an alternative |
+| PR number or URL, including draft-only | Explicitly selected source; otherwise a single native GitHub-linked issue; then inline Spec or the legacy whole-description fallback |
 | Local branch or commit | Issue references in commits, an explicitly provided spec path, then matching files under `docs/`, `specs/`, or `.scratch/` |
 
-A self-contained PR description needs no tracker setup. Requirement references are followed as needed. An empty or unfilled-template PR description, or a local review with no matching spec, prompts for the missing requirements. Only your confirmation that no spec exists permits skipping that axis.
+A self-contained PR description needs no tracker setup. A Spec issue link is sufficient without copying its requirements; a single native linked issue also works without repeating its link in the description. Incidental issue mentions are supporting context, not automatic source selections. Multiple candidates need clarification unless a source is explicitly designated.
+
+Empty Spec placeholders, inaccessible or unusable requirements, and source conflicts prompt for clarification or an explicitly incomplete affected Spec assessment. An explicitly selected source does not erase a conflict. Only your confirmation that no spec exists permits skipping that axis.
 
 ## Separate axes, shared scope
 
@@ -37,7 +39,7 @@ A self-contained PR description needs no tracker setup. Requirement references a
 | Spec | Missing requirements, incorrect implementations, and scope creep |
 | Correctness, comprehensive only | Concrete defects beyond stated requirements |
 
-Each axis uses a separate [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) with a fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window) where supported. If the harness lacks subagents, the skill discloses sequential passes instead. Findings are validated before delivery and remain grouped by axis.
+Each axis uses a separate [subagent](https://www.aihero.dev/ai-coding-dictionary/subagent) with a fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window) where supported. If the [harness](https://www.aihero.dev/ai-coding-dictionary/harness) lacks subagents, the skill discloses sequential passes instead. Findings are validated before delivery and remain grouped by axis.
 
 | Base source | Priority |
 | --- | --- |
@@ -54,9 +56,17 @@ Git does not reliably store the original branch name. The skill announces the se
 
 PR input produces one Comment review with new actionable findings inline and an overall summary in its body. Exact replacements may use GitHub suggestion blocks. Local input and explicit draft-only produce chat output without GitHub writes. Neither route edits source files.
 
-**Do I have to confirm that the PR description is the spec?**
+**Do I have to copy the issue spec into the PR?**
 
-No. For a PR review, the description is the default spec. Keep the intended behavior and acceptance criteria there. This skill reads that description; writing or maintaining it remains a separate workflow. Local reviews retain their existing issue/path/file lookup.
+No. The review fetches the authoritative issue from an explicit Spec link or a single native GitHub-linked issue. Without an issue, inline Spec contents work; older PRs can still use the whole description. Explicit user-selected overrides remain supported and are named in the report. Local reviews retain their existing issue/path/file lookup.
+
+**What if the PR only implements part of the issue?**
+
+Declare the agreed slice and deferred requirements in the PR. The reviewer assesses that scope against the issue rather than demanding every parent requirement. It cannot infer permission to omit requirements from the implementation itself.
+
+**Does the reviewer fix conflicting requirements?**
+
+No. It reports the conflict and marks the affected Spec assessment incomplete, while retaining independently demonstrable findings. Review is read-only: it edits neither issues nor PR descriptions.
 
 **Can an approval still include suggestions?**
 
@@ -81,10 +91,10 @@ They are evidence-backed recommendations, not proof. The skill checks findings a
 - Local and draft-only reviews never post to GitHub.
 - Repeated reviews account for replies and fixes without duplicating unchanged findings.
 - Separate axis summaries state skipped checks, missing requirements, and remaining blockers.
-- A PR review names the PR description as its spec without asking for permission, and notices description changes before publication.
+- A PR review names its actual authoritative source and agreed slice, and refreshes affected findings when issue requirements or the PR change before publication.
 
 ## Where it fits
 
-This is a build-chain review step and a standalone review tool. [implement](https://aihero.dev/skills-implement) supplies built work; [retro](https://aihero.dev/skills-retro) turns review misses into environment improvements. [pr](https://aihero.dev/skills-pr) shapes PR descriptions; this review skill uses the description as its default requirements source. Changing PR creation to produce a spec is separate work.
+This is a build-chain review step and a standalone review tool. [implement](https://aihero.dev/skills-implement) supplies local commits; [pr](https://aihero.dev/skills-pr) publishes intended work and its authoritative requirements before a separately requested review. Prefer a fresh reviewing [session](https://www.aihero.dev/ai-coding-dictionary/session), with your chosen model and reasoning level. Neither publication nor review starts an automatic fix loop or merge. [retro](https://aihero.dev/skills-retro) turns review misses into environment improvements.
 
 [ask-matt](https://aihero.dev/skills-ask-matt) routes across the whole set.

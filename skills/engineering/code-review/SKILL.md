@@ -11,7 +11,7 @@ Review the **full branch diff**, keeping the review axes separate:
 
 Focused is the default. An explicit comprehensive or pre-merge request adds Correctness. Focused reviewers still report serious bugs they notice; they do not conduct a dedicated correctness investigation. Use the user's current model and reasoning level for every axis. Never upgrade or downgrade them automatically; disclose if the harness cannot preserve the selection.
 
-This skill adds no hooks or CI automation. Reviewing a PR publishes by default; explicit draft-only overrides publication. Local input stays local even if the branch has a PR. Read-only review: suggest changes, leave working files and Git history untouched.
+This skill adds no hooks or CI automation. Reviewing a PR publishes by default; explicit draft-only overrides publication. Local input stays local even if the branch has a PR. Read-only review: suggest changes, leave working files and Git history untouched. Do not edit issues or PR descriptions, rewrite requirements, or apply fixes.
 
 Use the configured tracker workflow when fetching referenced issues. If that workflow is needed but missing, tell the user to run `/setup-matt-pocock-skills`. A self-contained PR description does not require issue-tracker setup.
 
@@ -43,7 +43,16 @@ Read reviewed source, spec, and standards from the pinned head (for example, `gi
 
 ## 2. Identify the spec
 
-**PR input, including draft-only:** use the fetched **PR description as the spec by default**, without asking permission or searching commit messages first. Snapshot the body used for review and name it as the source in the report. Follow requirement references in that description when needed to understand it; do not silently replace it with an unrelated issue or infer requirements from the implementation. An explicitly requested alternative spec overrides this default and must be named in the report. If the description is empty or only unfilled template placeholders, ask for the missing spec rather than pretending Spec passed. Skip only after the user confirms there is no spec.
+**PR input, including draft-only:** resolve the authoritative requirements from published artifacts, without reconstructing intent from code or requiring shared conversation history. Read [GITHUB.md](GITHUB.md) for native linked-issue discovery and snapshot mechanics.
+
+1. Preserve an explicit user-selected spec override and name it. Still surface conflicts with other declared requirements.
+2. Otherwise, an explicitly designated source in the PR's **Spec** section selects the authoritative issue or approved inline requirements. Fetch a designated issue's requirements, including necessary linked parent requirements; the link is enough, and the PR need not duplicate them.
+3. If no source is explicitly selected, a **single native GitHub-linked issue** supplies the spec even when the description does not repeat its link. Multiple candidates require clarification unless the PR explicitly designates one. An incidental mention in the body or comments is not automatically a selected spec; other issue/PR links can be supporting context.
+4. Without an authoritative issue, use inline Spec contents. For legacy PRs without a Spec section or authoritative issue, retain the whole-description fallback. Do not search commit messages first for PR input.
+
+Snapshot the PR body, linked-issue selection, and exact requirements used; name the actual source in the report. Distinguish authoritative requirements from supporting implementation/context. An explicitly agreed partial slice and deferred requirements in the PR description define the delivery to assess against the issue: do not demand the whole parent spec, infer a slice from code, or excuse unmet in-scope requirements.
+
+Empty/unfilled Spec sections, unusable issue requirements, inaccessible required sources, or conflicting requirements require clarification or an explicitly incomplete affected Spec assessment. A source selection does not erase a real conflict. Report conflicts without editing either artifact; independently demonstrable findings remain reportable. Never invent requirements or silently pass Spec. Skip only after the user confirms there is no spec.
 
 **Local input:** preserve the existing discovery order, even if an associated PR supplied the comparison base:
 
@@ -69,7 +78,7 @@ Tell each reviewer: "Perform this review directly. Do not invoke code-review rec
 Each reviewer returns concise, evidence-backed findings with: axis, file and line/hunk, problem and concrete consequence, evidence, suggested remedy, and blocking/nonblocking classification. Cite a rule for Standards violations and a requirement for Spec findings. Inspect surrounding code and relevant tests before asserting a defect. Distinguish demonstrated problems from optional improvements. Do not edit files.
 
 - **Standards brief**: include all standards sources and the full smell baseline, not just its path. Report mandatory rule violations separately from heuristic smells. Skip findings already enforced by tooling. Repo rules override the baseline.
-- **Spec brief**: include the spec contents or accessible path. Report missing/partial requirements, incorrect implementations, and unrequested scope. Quote the requirement for each finding; do not invent requirements for unspecified behavior.
+- **Spec brief**: include the snapshotted authoritative requirements or accessible snapshot path, source identity, supporting context, and any declared agreed slice/deferred scope. Report missing/partial in-scope requirements, incorrect implementations, and unrequested scope. Quote the requirement for each finding; do not invent requirements for unspecified behavior. For conflicting or inaccessible sources, mark the affected assessment incomplete without rewriting requirements.
 - **Correctness brief** (comprehensive only): investigate behavior beyond explicit requirements: failure paths, boundary cases, state transitions, trust boundaries, authorization, data loss, concurrency, and material algorithmic/resource regressions as applicable. Give a concrete failing scenario or trace for each finding. Exclude hypothetical issues without a plausible path in the changed code.
 
 ## 5. Validate, reconcile, recommend

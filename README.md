@@ -255,8 +255,8 @@ Skills I use daily for code work.
 - **[tdd](./skills/engineering/tdd/SKILL.md)**: Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `GLOSSARY.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface.
-- **[code-review](./skills/engineering/code-review/SKILL.md)**: Review the full branch diff along **Standards** and **Spec**, with **Correctness** added in comprehensive mode. PR input publishes a Comment review with inline findings; local input reports in chat. Uses your selected model and reasoning level.
-- **[pr](./skills/engineering/pr/SKILL.md)**: The shape a pull request body should take: a summary as the smallest visual that makes the change clear, before/after evidence that it works, and a merge-danger call (one-way or two-way door, plus blast radius).
+- **[code-review](./skills/engineering/code-review/SKILL.md)**: Review the full branch diff along **Standards** and **Spec**, with **Correctness** added in comprehensive mode. PR input resolves authoritative issue or inline requirements and publishes a Comment review with inline findings; local input reports in chat. Uses your selected model and reasoning level.
+- **[pr](./skills/engineering/pr/SKILL.md)**: Verify and safely publish intended changes, open or update a PR with authoritative requirements, evidence, and merge danger, then hand off user-triggered review. Body-only requests stay text-only.
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
 
 ### Productivity
