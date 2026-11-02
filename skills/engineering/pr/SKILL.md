@@ -23,9 +23,18 @@ Fetch the relevant remote refs without overwriting local branches. Inspect the f
 
 ## 2. Confirm a feature branch
 
-On `main` or the repository's default branch, warn and pause before committing or creating a branch. Suggest a descriptive feature-branch name; let the user accept or replace it and obtain confirmation before creation. Reuse an appropriate existing feature branch; clarify an unsuitable branch rather than silently switching.
+On `main` or the repository's default branch, warn and pause before committing or creating a branch. Suggest a name using the guidance below; let the user accept or replace it and obtain explicit confirmation before creation. Unlike `implement`, a publication request does not authorize automatic branch creation. Reuse and announce a suitable existing feature branch, even if its naming style differs; this is not a routine branch-renaming filter.
 
-Preserve intended local commits and uncommitted work on the confirmed feature branch. Never blindly stage all changes, discard unrelated work, amend existing commits, force-push, or rewrite remote default-branch history.
+When a new suggestion is needed, honor an explicitly requested name; otherwise follow an established target-repository convention from instructions or consistent branch history, not one stray name. Without one, use purpose-based [Conventional Branch](https://conventionalbranch.org/) naming:
+
+- Prefer `feat/`, `fix/`, or `chore/`; reserve `hotfix/` for urgent fixes and `release/` for release preparation. Default to the work's purpose, not an agent/vendor prefix.
+- For a fetched GitHub issue, use `<type>/issue-<number>-<very-short-description>`, such as `feat/issue-8-branch-names`. For another configured tracker, retain its recognizable, lowercase-normalized issue key instead of `issue-<number>`; no new integration is needed. For inline requirements without an issue, omit the identifier rather than invent one.
+- Derive very few meaningful words from the fetched issue's intended change (or agreed inline requirements). Drop title boilerplate such as "To do" instead of mechanically slugifying the title; no rigid word count is needed. If the issue is not fetched yet, fetch it before deriving a suggestion.
+- Generated defaults use lowercase alphanumerics and single hyphens, with one slash after the type. Dots may separate alphanumeric version components, never adjacent to a hyphen or another dot; descriptions start and end alphanumerically. Validate any new name with `git check-ref-format --branch` as well as the applicable naming convention.
+
+Before creation, check for collisions with existing local and remote branches, including conflicting ref paths. A collision, obviously misnamed current or requested branch, ambiguous choice, invalid requested name, or unsafe state requires an explanation, a suitable proposed name or safe next step, and a pause for the user's decision. An explicit name does not waive these gates. Never silently rename, switch to a colliding branch, or append an arbitrary suffix.
+
+Preserve intended local commits and uncommitted work on the confirmed feature branch. Never automatically stash, reset, force a switch, blindly stage all changes, discard unrelated work, amend existing commits, force-push, or rewrite remote default-branch history.
 
 ### Optional local-main cleanup
 

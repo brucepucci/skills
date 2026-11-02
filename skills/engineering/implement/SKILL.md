@@ -37,13 +37,25 @@ After approval, update the authoritative issue spec and add an issue comment sum
 
 Once the spec, testing decisions, and feature branch are settled, this invocation is sufficient authorization to proceed. Do not require approval of another routine implementation plan. Make ordinary implementation choices within the agreed spec; ask again for material changes or decisions outside it.
 
-## 4. Confirm a feature branch and preserve existing work
+## 4. Establish a feature branch and preserve existing work
 
-Before implementation changes, inspect the current branch, repository default branch, working tree, and existing history.
+Before implementation changes, inspect the current branch, repository default branch, working tree, existing history, in-progress Git operations, and worktree use. Resolve ownership and safety before changing branches.
 
-- On `main` or the repository's default branch, warn and pause. Suggest a feature-branch name; let the user accept or replace it, and obtain confirmation before creating it or making implementation changes.
-- Reuse an appropriate existing feature branch when already selected. Clarify an unsuitable or ambiguous branch rather than silently switching or proceeding. Confirm the intended branch before work starts.
-- Distinguish intended work from unrelated changes. Preserve unrelated work and history; ask when ownership or scope is ambiguous. Never blindly stage all changes, discard unrelated work, amend unrelated commits, or rewrite history to make the branch look ready. Local-main cleanup belongs to the separate publishing workflow, not this skill.
+### Naming a new branch
+
+Honor an explicitly requested name. Otherwise follow an established target-repository convention, looking at repository instructions and consistent branch history rather than treating one stray name as a convention. Without one, use purpose-based [Conventional Branch](https://conventionalbranch.org/) naming:
+
+- Prefer `feat/`, `fix/`, or `chore/`; reserve `hotfix/` for urgent fixes and `release/` for release preparation. Default to the work's purpose, not an agent/vendor prefix.
+- For a GitHub issue, use `<type>/issue-<number>-<very-short-description>`, such as `feat/issue-8-branch-names`. For another configured tracker, retain its recognizable, lowercase-normalized issue key instead of `issue-<number>`; no new integration is needed.
+- Derive very few meaningful words from the fetched issue's intended change. Drop title boilerplate such as "To do" instead of mechanically slugifying the title; no rigid word count is needed.
+- Generated defaults use lowercase alphanumerics and single hyphens, with one slash after the type. Dots may separate alphanumeric version components, never adjacent to a hyphen or another dot; descriptions start and end alphanumerically. Validate any new name with `git check-ref-format --branch` as well as the applicable naming convention.
+
+### Proceed or pause
+
+- Once the authoritative requirements and testing decisions are settled, an implementation request authorizes safe local branch creation from `main` or the repository's default branch. Announce the intended name, create the branch from the current tip, and verify it is current before implementation. There is no separate routine branch-name approval gate, and implementation never starts on the default branch.
+- Reuse a suitable existing feature branch and announce it. A harmless naming-style difference is not a reason to pause or rename.
+- Before creation, check for collisions with existing local and remote branches, including conflicting ref paths. A collision, obviously misnamed current or requested branch, ambiguous choice, invalid requested name, or unsafe state requires an explanation, a suitable proposed name or safe next step, and a pause for the user's decision. An explicit name does not waive these gates. Never silently rename, switch to a colliding branch, or append an arbitrary suffix.
+- Distinguish intended work from unrelated changes and commits. Preserve them and existing branch history; ask when ownership or scope is ambiguous. Never automatically stash, discard work, reset, force a switch, blindly stage all changes, amend unrelated commits, or rewrite history to make branch handling succeed. Local-main cleanup belongs to the separate publishing workflow, not this skill.
 
 ## 5. Implement and verify
 
