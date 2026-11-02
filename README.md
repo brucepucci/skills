@@ -36,7 +36,9 @@ Parking reasons and reconsideration triggers live in
 
 The personal idea-to-ship flow is `grill-me` → `to-spec` → optional `to-tickets`
 → `implement` → `pr` → comprehensive `code-review` → `merge-and-cleanup`.
-Publication, review, and merging remain separate user choices.
+Publication, review, and merging remain separate user choices. See the
+[personal workflow reference](./docs/workflow.md) for the chart, entry points,
+optional routes, and handoff boundaries.
 [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) routes over the active
 selection. `wayfinder`, `improve-codebase-architecture`, `handoff`, `retro`, and
 `wait-what` remain available only by explicit user entry; their supporting calls

@@ -18,7 +18,7 @@ A **flow** is a path through the skills. Most paths run along one **main flow**,
 
 ## The main flow: idea → ship
 
-The route most work travels. You have an idea and want it built.
+The route most work travels. You have an idea and want it built. For a compact visual reference to this fork's active feature route, read [the personal workflow](../../../docs/workflow.md): it maps draft and existing-issue entry, optional splitting, review fixes, scope deferral, and exact finish states. Its connections are possible human-chosen next actions, not automatic invocation; the current skill definitions remain authoritative.
 
 1. **`/grill-me`** sharpens the idea by interview, with or without a working directory. It runs the `/grilling` primitive and keeps the discussion in the conversation rather than writing `GLOSSARY.md` or ADRs. This is the active interview entry; record the settled requirements with `/to-spec`.
 2. **Branch: can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/handoff`** in both directions (a prototype lives in its own directory, which is exactly what `/handoff` is for; see Phase boundaries):
