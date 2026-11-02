@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Prepare and publish a PR, or update an existing PR, with authoritative requirements, verification evidence, and a manual review handoff. Use when the user asks to publish changes, open/update a PR, or write its body."
+description: "Publish prepared changes, create/update a PR, and reply to demonstrably addressed review feedback. Use for publication or PR-update requests; explicit preview, body-only, or local-only requests retain their limits. Fixing review findings alone is not publication authorization."
 metadata:
   credits:
     skill: show-me
@@ -9,15 +9,23 @@ metadata:
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
 
-Prepare and publish the intended work against the **authoritative spec**, then stop at a manual review handoff. This skill does not review, fix findings, or merge. It does not require `to-spec` or automatically create an issue.
+Publish prepared work against the **authoritative spec**, then stop at a manual review handoff. An unqualified `/pr` invocation authorizes the full publication workflow, not merely proposed text. Honor explicit limits:
 
-For a request only to write or preview a body, resolve scope and requirements, read [BODY.md](BODY.md), and return prepared text with honest evidence. That request authorizes no branch/history mutations, commits, pushes, or publication. Publication requests follow the full workflow below. Use the user's domain language from `GLOSSARY.md` where available.
+| Request | Authority |
+| --- | --- |
+| `/pr` or a publication/update request | Verify, commit intended changes if needed, publish, and finish PR updates/replies below |
+| Body-only or preview | Resolve scope/requirements, read [BODY.md](BODY.md), return text with honest evidence; no branch/history changes or remote writes |
+| Local-only | Stay local and honor the stated local mutation limits; clarify any unclear permission before mutation |
+
+Ordinary implementation, a request to fix findings, and discovery of an open PR grant no publication authority. This skill consumes prepared fixes; it reads feedback for publication context, not to start another implementation or review-fix loop. Review, approval, thread resolution, and merge remain separately authorized. It does not require `to-spec` or automatically create an issue. Use the user's domain language from `GLOSSARY.md` where available.
 
 ## 1. Resolve destination and inspect scope
 
 Inspect repository instructions, working tree (including staged and untracked changes), current branch, remotes, default branch, and history. Explicitly resolve the intended publication repository and push remote; never assume the skills distribution repository or trust GitHub CLI's fork/upstream inference. Verify the destination and use explicit `--repo OWNER/REPO` or API paths on GitHub operations.
 
-Look for the current branch's open PR in that destination before creating one. Reuse it when unambiguous. For an existing PR, use its target branch as the base; for a new one, normally use the intended repository's default branch. Clarify ambiguous repository, remote, base, or PR selection. Network/authentication errors are not evidence that no PR exists.
+Look for the current branch's open PR in that destination, matching its head repository/owner and branch, before creating one. Reuse it when unambiguous. For an existing PR, use its target branch as the base; for a new one, normally use the intended repository's default branch. Clarify ambiguous repository, remote, base, or PR selection and unexpected closed/merged state. Network/authentication errors are not evidence that no PR exists.
+
+For an existing PR, read [FOLLOW-UP.md](FOLLOW-UP.md) now: snapshot the description and published head, read the complete review conversation, and retain a recovery record before mutation. Follow its gates for description preservation, feedback dispositions, post-publication replies, and retries.
 
 Fetch the relevant remote refs without overwriting local branches. Inspect the full commit list and complete branch diff against the selected base, as well as uncommitted changes. Check the merge-base and detect truncated output. A clean working tree does not mean the branch contains only intended work. Announce repository, remote, branch, base, existing PR if any, and intended scope. Pause for unrelated existing commits or ambiguous ownership; preserve unrelated work rather than silently including or discarding it.
 
@@ -69,21 +77,25 @@ Use before/after evidence only when it actually exists. Missing baseline output,
 
 Read [BODY.md](BODY.md) for section format and optional visual guidance. Newly prepared descriptions use **Spec**, optional **Implementation**, **Evidence**, and **Merge Danger** in that order. Respect repository-required content while making these sections discoverable.
 
-For an existing PR, snapshot its current description and published head before editing or pushing. Preserve approved requirements and hand-written content while refreshing implementation details and verification evidence. Show conflicts and ask before overwriting existing content; do not replace the entire body blindly. Recheck the current remote state before writing if it could have changed.
+For an existing PR, prepare the preserved-content description and overall update against the saved published snapshot using FOLLOW-UP.md. Re-fetch authoritative requirements, including necessary parent sources, before publication; changed intent or conflicting description edits require reconciliation with the user, not a silent overwrite.
 
 Inspect the final working tree and full branch diff again. Confirm the starting HEAD, candidate tree, and verification status (including any authorized draft exception) still match the recorded snapshot, then commit only that candidate on the confirmed feature branch after the verification gate. Preserve unrelated work and staging; do not newly select files or hunks after checks. Verify the resulting commit's tree OID (`git rev-parse HEAD^{tree}`) equals the verified candidate OID; a mismatch blocks normal publication and requires preparing/verifying the actual candidate again. Reuse intended existing commits rather than amending them or creating an empty commit. Check that the prepared description accurately represents the whole delivery, not only the latest edits.
 
 ## 6. Publish or update once
 
-Reconfirm repository, remote, branch, base, and PR state before pushing. Pin the exact commit to push and confirm its tree OID matches the verified candidate; a later candidate change invalidates verification and returns to step 4. Verify the remote branch/PR head equals that pinned commit after pushing. If a draft exception was authorized, match the pushed tree to the recorded candidate and label its verification incomplete, never passed. An authorized draft exception requires a new draft PR or converting the existing PR to draft before pushing updates; pause if draft status cannot be established. Push only the confirmed feature branch to the resolved remote, without force. Create a PR only if there is no matching open one; update the existing one otherwise. Use explicit repository selection, and verify the returned URL and head/base belong to the intended destination. Preserve an existing draft unless the user authorizes marking it ready; disclose its status.
+Reconfirm repository, remote, branch, base, and PR state before pushing. Unexpected destination/head/base changes require reconciliation, not a blind push. Pin the exact commit to push and confirm its tree OID matches the verified candidate; a later candidate change invalidates verification and returns to step 4.
 
-For a substantive existing-PR update, add one concise comment describing changes since the previously published version, relevant new verification, and explicitly approved requirement changes. Compare against the saved published snapshot, not only the latest local commit. No-op reruns need no comment. Inspect the PR, branch, and existing comments before retrying an uncertain write so retries do not duplicate PRs or update comments.
+An authorized draft exception requires converting an existing PR to draft before pushing updates, or creating a new draft PR. Pause if required draft status cannot be established. Match the published tree to the recorded candidate and label its verification incomplete, never passed. Preserve an existing draft unless the user authorizes marking it ready; disclose its status.
 
-If a commit, push, or GitHub write fails, report the exact partial state and preserve local work and prepared text. Do not claim publication succeeded or silently change destinations.
+If the exact intended commit is already remote, skip the push and finish only missing PR artifacts. Otherwise push only that pinned commit from the confirmed feature branch to the explicit destination branch/remote, without force or history rewriting. Verify the remote branch and existing PR head equal that pinned commit. Create a PR only if there is no matching open one; update the existing one otherwise. Use explicit repository selection, and verify the returned URL and head/base belong to the intended destination, including the pinned head after new-PR creation. Confirm these identities before describing a fix as published.
+
+After verified publication, finish the existing PR's description, one substantive overall update, and demonstrably addressed inline replies using FOLLOW-UP.md. Keep updates on the PR: add no redundant issue implementation handoff and close no linked issue. A fully current rerun creates no commit, push, body edit, or duplicate comment.
+
+If a commit, push, or GitHub write fails, inspect actual state before retrying an uncertain operation. Preserve local work, prepared text, and the recovery record; report exact partial progress rather than claiming completion or changing destinations. Never undo a successful push because a later write failed. Clearly independent, already-authorized safe replies may continue; dependent or uncertain actions wait.
 
 ## 7. Hand off manual review
 
-Return the PR URL, verification summary/limitations, and this suggested next step:
+Return the PR URL, published commit/head, verification summary/limitations, feedback dispositions, any incomplete publication steps, and this suggested next step:
 
 > In a fresh session, select your review model and reasoning level, then request: `/code-review comprehensive <PR URL>`.
 

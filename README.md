@@ -282,7 +282,7 @@ Skills I use daily for code work.
 - **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)**: Actively build and sharpen a project's domain model: challenge terms against the glossary, stress-test with edge-case scenarios, and update `GLOSSARY.md` and ADRs inline.
 - **[codebase-design](./skills/engineering/codebase-design/SKILL.md)**: Shared discipline and vocabulary for designing deep modules: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface.
 - **[code-review](./skills/engineering/code-review/SKILL.md)**: Review the full branch diff along **Standards** and **Spec**, with **Correctness** added in comprehensive mode. PR input resolves authoritative issue or inline requirements and publishes a Comment review with inline findings; local input reports in chat. Uses your selected model and reasoning level.
-- **[pr](./skills/engineering/pr/SKILL.md)**: Verify and safely publish intended changes, open or update a PR with authoritative requirements, evidence, and merge danger, then hand off user-triggered review. Body-only requests stay text-only.
+- **[pr](./skills/engineering/pr/SKILL.md)**: Publish prepared changes, update the matching PR and demonstrably addressed inline feedback, then hand off user-triggered review. Explicit preview, body-only, and local-only requests retain their limits.
 - **[wizard](./skills/engineering/wizard/SKILL.md)**: Generate an interactive bash wizard that walks a human through steps only they can perform: provisioning infrastructure, setting up credentials or CI secrets, walking an unfamiliar third-party dashboard, or running a one-off migration or cutover.
 
 ### Productivity
