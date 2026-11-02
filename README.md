@@ -269,7 +269,7 @@ Skills I use daily for code work.
 - **[to-tickets](./skills/engineering/to-tickets/SKILL.md)**: Break any plan, spec, or conversation into a set of tracer-bullet tickets, each declaring its blocking edges, written as text in a local file, or as native blocking links on a real tracker.
 - **[implement](./skills/engineering/implement/SKILL.md)**: Implement one selected issue from a validated spec, automatically create a safe local feature branch when needed, verify, and hand off a local commit without automatic publication or review.
 - **[implement-spec](./skills/engineering/implement-spec/SKILL.md)**: Implement a whole spec on one integration branch. Works the tickets as a task graph, running implementer subagents across the ready frontier for maximum concurrency, then closes out with `/code-review`.
-- **[merge-and-cleanup](./skills/engineering/merge-and-cleanup/SKILL.md)**: Explicitly finish a reviewed GitHub PR with a squash merge, safe source-branch cleanup, and completion of fully delivered issues.
+- **[merge-and-cleanup](./skills/engineering/merge-and-cleanup/SKILL.md)**: Explicitly finish a reviewed GitHub PR with a squash merge, safe source-branch cleanup, and invocation-authorized completion of clearly identified, fully delivered implementation issues.
 - **[wayfinder](./skills/engineering/wayfinder/SKILL.md)**: Plan a huge chunk of work, more than one agent session can hold, as a shared map of decision tickets on the issue tracker, and resolve them one at a time until the way to the destination is clear.
 - **[retro](./skills/engineering/retro/SKILL.md)**: Suggest improvements to the coding agent's environment (navigation, automated checks, coding standards, steering files, tooling) after a session, most severe first.
 

@@ -22,7 +22,9 @@ A Git checkout, authenticated GitHub CLI (`gh`), and permission for the requeste
 
 ## Verified delivery, bounded cleanup
 
-Invocation authorizes the resolved safe happy path without another routine confirmation. The latest eligible completed assessment must recommend approval for the exact current head, cover Standards, Spec, and Correctness, and leave no unresolved blockers. Assessment authors need repository write access or your explicit designation. A `code-review` Comment review qualifies; a native approval alone is insufficient evidence.
+Invocation authorizes the resolved safe happy path, including completion comments and closure of clearly identified, fully delivered implementation issues, without another routine confirmation. An authoritative PR Spec selection can identify the issue without native closing links. Applicable comprehensive approval covering the issue's complete, current requirements is sufficient delivery evidence; closeout consumes that assessment rather than reviewing the implementation again.
+
+The latest eligible completed assessment must recommend approval for the exact current head, cover Standards, Spec, and Correctness, and leave no unresolved blockers. Assessment authors need repository write access or your explicit designation. A `code-review` Comment review qualifies; a native approval alone is insufficient evidence.
 
 | Condition | Outcome |
 | --- | --- |
@@ -32,11 +34,22 @@ Invocation authorizes the resolved safe happy path without another routine confi
 | Dirty checkout, in-progress operation, or unsafe default-branch update | Stops before merging and preserves your work |
 | Source branch has extra commits, is protected/default, or is used by another worktree | Preserves that branch and reports incomplete cleanup |
 | Another contributor owns the source fork | Asks for separate remote-deletion authorization |
-| An issue is mentioned but not authorized as fully complete | Leaves it open; native or squash-message references that would close partial or unauthorized work require consultation before merging |
+| Identified implementation issue has applicable full-scope approval | Completes it after verified merge without another routine confirmation, including a Spec-only relationship |
+| Identified implementation issue has partial, uncertain, or stale delivery evidence | Consults before any merge, even without automatic closing references; explicit partial delivery leaves it open |
+| Incidental mention, background source, or parent/umbrella context | Receives no completion action merely because it is referenced; conflicting native or squash-message closing effects require consultation |
 
-A review override does not waive GitHub checks or protections. New commits, newly discovered blockers, or detectable changes to reviewed requirements require a new decision. The skill never launches review or fixes findings for you.
+A review override does not waive GitHub checks or protections, establish full issue delivery, or authorize issue completion. Issue outcomes are resolved explicitly in the same consultation where possible. New commits, newly discovered blockers, or detectable changes to reviewed requirements require a new decision. The skill never launches review or fixes findings for you.
 
 ## Common questions
+
+**Does the implementation issue need a closing keyword or another confirmation?**
+
+No. A clearly identified implementation issue selected in the authoritative PR Spec qualifies without native closing syntax. Applicable full-scope comprehensive approval establishes delivery, and invocation authorizes its completion after the merge is verified. Each implementation issue needs its own applicable scope evidence.
+
+**Do testing limitations or follow-up issues prevent completion?**
+
+- Disclosed bounded validation, tests not run, and unrelated baseline failures do not by themselves negate otherwise applicable comprehensive approval. Closeout does not repeat the review.
+- Deferred requirements remain unfinished unless you explicitly agree to change the authoritative requirements. Opening follow-up issues alone does not make the original issue complete. Partial or unclear delivery prompts consultation before merging.
 
 **Will a squash merge erase commits that exist only on my local branch?**
 
@@ -52,7 +65,7 @@ Yes. GitHub can put closing keywords from those inputs into the squash commit ev
 
 **What happens when the merge works but cleanup fails?**
 
-The merge remains intact. Independent safe, already-authorized steps can finish, and the report lists what failed or remains. A rerun checks actual state and existing issue comments before retrying, rather than merging again or duplicating completion comments.
+The merge remains intact. Independent safe, already-authorized steps can finish, and the report lists what failed or remains. A rerun checks actual state and existing issue comments before retrying, rather than merging again or duplicating completion comments. Recovery reuses applicable approval at the recorded merged head, not a new post-merge commit. Unclear issue delivery pauses affected comments and closures for consultation while safe branch cleanup can continue.
 
 ## It's working if
 
@@ -60,7 +73,8 @@ The merge remains intact. Independent safe, already-authorized steps can finish,
 - A review shortcoming produces an explicit override decision rather than a surprise merge or an automatic reviewer.
 - Additional commits and other worktrees remain untouched, even when cleanup cannot finish.
 - Before merging, you see the squash title/body and any closing-reference conflict, including one found only in the title or source commit text.
-- Fully completed, authorized issues get one short completion comment linking the PR and merge commit; incidental mentions stay open.
+- A fully delivered Spec-selected implementation issue gets one short completion comment linking the PR and merge commit, then closure without routine reauthorization; incidental mentions receive no completion action.
+- Unclear or partial implementation-issue delivery prompts consultation before merging, even when no keyword would close it automatically.
 - The final report names retained branches and failures, and shows the actual checkout/update state. A non-default target is never presented as default-branch delivery.
 
 ## Where it fits
