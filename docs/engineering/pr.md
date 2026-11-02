@@ -2,7 +2,9 @@
 
 `pr` prepares and publishes intended changes, or updates their existing pull request, against the authoritative [spec](https://www.aihero.dev/ai-coding-dictionary/spec). It checks the whole delivery, runs required verification, safely handles the branch and commits, and publishes requirements and evidence a reviewer can use without the authoring conversation.
 
-It stops at a manual review handoff. Publication does not launch a reviewer, select a review [model](https://www.aihero.dev/ai-coding-dictionary/model), fix findings, or merge. A body-only request produces text without permission to commit, push, or publish.
+An unqualified `/pr` authorizes publication, including prepared review follow-ups. The skill reuses the matching open PR, refreshes its description, posts a concise overall update, and replies to inline findings demonstrably addressed by the published changes. Fixing and publishing stay separate: a fix request or an existing PR alone authorizes no push.
+
+It stops at a manual review handoff. Publication does not launch a reviewer, select a review [model](https://www.aihero.dev/ai-coding-dictionary/model), implement more findings, resolve threads, approve, or merge. Explicit preview, body-only, and local-only requests retain their limits.
 
 ## When to reach for it
 
@@ -11,8 +13,9 @@ Type `/pr`, or the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) re
 | Your situation | Reach for |
 | --- | --- |
 | Local work is ready to publish | `pr`, with the intended issue or agreed requirements |
-| An existing PR needs new commits or evidence | `pr`, reusing the open PR |
-| You only want draft description text | Ask `pr` for a body only |
+| Prepared fixes should reach an existing PR and its reviewers | `pr`, reusing the matching open PR |
+| You only want draft description text | Ask `pr` for a body only or preview; no commits or remote writes |
+| You want local preparation without publication | Ask `pr` for local-only work and state any local mutation limits |
 | You want feedback, not publication of the branch | [code-review](https://aihero.dev/skills-code-review) |
 
 ## Prerequisites
@@ -47,13 +50,27 @@ Verification applies to the **candidate tree**, the exact intended contents to p
 - Unrelated work and history are preserved without automatic stashing, resetting, or forced switching; ambiguous ownership pauses the run.
 - Local-main cleanup is optional, only after preserving work, and needs separate confirmation showing the exact move to the verified remote-tracking tip.
 - Failed or unavailable required verification stops normal committing, pushing, and publication. You may explicitly authorize a draft exception; Evidence records the exception and missing checks.
-- An existing PR is updated without blindly replacing approved requirements or hand-written content. Substantive updates get a concise change comment; no-op reruns do not.
+- An existing PR is updated without blindly replacing approved requirements or hand-written content. Conflicting concurrent edits pause for consultation.
+
+## Prepared fixes, published replies
+
+The **published delta** covers every follow-up commit since the saved PR head. The overall update links the published commits, reports real verification and limitations, and identifies approved requirement changes without copying the spec. Inline discussion and ordinary PR comments both count as feedback.
+
+| Feedback | What the reviewer sees |
+| --- | --- |
+| An inline finding demonstrably fixed by the publication | A reply in its original thread explaining the change and linking the published fixing commit |
+| A requested change outside an inline thread | Its disposition in the overall update |
+| Deferred, disputed, unverified, or ambiguously mapped feedback | An explicit disposition or limitation, not a speculative fix claim |
+
+Replies follow verified publication. An outdated comment is not proof of a fix or acceptance, and the skill leaves thread-resolution state alone. It does not implement outstanding findings during publication.
+
+Interrupted publication is recoverable. The skill retains the saved head, evidence, prepared text, and completed/pending artifact details outside tracked source. It inspects actual remote state before retrying uncertain writes. Already-pushed commits need only missing description/comments; a fully current rerun writes nothing. A successful push followed by a comment failure is reported as partial publication, with independent safe replies able to finish and uncertain actions paused. Updates stay on the PR, without another issue handoff or issue closure.
 
 ## Common questions
 
 **Does it open the PR for me now?**
 
-Yes. In this fork, `pr` owns publication as well as the description. [implement](https://aihero.dev/skills-implement) still stops with a local commit. You separately choose when to publish and when to review.
+Yes. In this fork, an unqualified `/pr` authorizes verification and publication, not only proposed text. It opens a new PR or updates the matching open one. [implement](https://aihero.dev/skills-implement) still stops with a local commit, even if a PR exists or the work fixes review findings. You separately choose when to publish and when to review.
 
 **Will publishing rename my existing branch?**
 
@@ -71,9 +88,13 @@ The skill says so. It reports checks actually run, including failures and limita
 
 That directory can contain unrelated tracked or untracked changes that will not be published. A test can pass using one of those files while the intended commit fails without it. Isolated candidate verification checks the delivery instead of the mixed workspace. If the required environment cannot be prepared faithfully, the skill reports verification as unavailable rather than claiming a pass.
 
-**Can it sort through review comments or fix them automatically?**
+**Does it reply to review comments or fix more findings?**
 
-No. It updates the PR's intended changes and evidence, then returns its URL and a suggested comprehensive-review request. Choose the model and reasoning level yourself in a fresh reviewing [session](https://www.aihero.dev/ai-coding-dictionary/session). Findings and fixes remain separate decisions.
+It reads feedback and replies to inline findings demonstrably addressed by your prepared, published fixes. Deferred, disputed, and unverified requests remain explicit in the overall update. It neither implements more findings nor resolves threads. Choose the model and reasoning level yourself in a fresh reviewing [session](https://www.aihero.dev/ai-coding-dictionary/session), then request review separately.
+
+**What if `/pr` still gives me only a body?**
+
+Check the actual skill source expanded in that session against the intended checkout. One recorded incident expanded historical body-only text from a cache-named path, while today's discovery links point into the checkout. That proves different text was loaded, not why it was selected. Ask the agent to read the intended current `pr/SKILL.md` explicitly before retrying; this change adds no automatic updating, cache cleanup, or installation repair.
 
 **Can I trust the door call?**
 
@@ -85,7 +106,9 @@ Treat it as an assessable claim. Reverting a commit will not unsend emails or ne
 - The scope matches the whole branch delivery, not only the latest edits.
 - New branch suggestions describe the purpose and issue, creation waits for your confirmation, and suitable existing branches stay named as they are.
 - Evidence identifies the checked candidate tree, real checks, and their limitations, including any draft exception.
-- Reruns preserve your edits and avoid duplicate PRs or no-op comments.
+- An unqualified invocation reaches a verified published head, or explains the blocker instead of silently returning proposed text.
+- Reviewers receive an overall delta update and evidence-backed inline replies with fixing-commit links; unresolved dispositions stay explicit and thread state stays unchanged.
+- Reruns preserve your edits and avoid duplicate PRs, pushes, or comments; failures identify exactly what reached GitHub and what remains.
 - You receive the PR URL and a manual review suggestion, with no reviewer launched or merge performed.
 
 ## Where it fits

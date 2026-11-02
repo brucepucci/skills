@@ -106,7 +106,7 @@ Show a whole block instead when most of it is new, omitted context would hide ow
 
 ## Evidence
 
-Identify the candidate tree OID and the isolated verification environment. Results apply only to that tree; changed contents need fresh checks. An authorized draft exception identifies the candidate but explicitly marks its verification incomplete. Prefer actual execution output. Use screenshots for visual changes when the environment supports them. Show exact commands and results, not invented tests or pseudocode presented as execution. Before/after evidence is valuable only when both were actually captured; otherwise say that no before-change evidence was collected. State failures and coverage limits alongside successful checks.
+Identify the candidate tree OID and the isolated verification environment. Record the pinned published commit/head once confirmed remotely, so evidence and follow-up links identify the actual delivery. Results apply only to that tree; changed contents need fresh checks. An authorized draft exception identifies the candidate but explicitly marks its verification incomplete. Prefer actual execution output. Use screenshots for visual changes when the environment supports them. Show exact commands and results, not invented tests or pseudocode presented as execution. Before/after evidence is valuable only when both were actually captured; otherwise say that no before-change evidence was collected. State failures and coverage limits alongside successful checks.
 
 ## Merge Danger
 
