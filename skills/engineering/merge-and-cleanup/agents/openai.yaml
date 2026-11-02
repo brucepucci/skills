@@ -1,0 +1,5 @@
+interface:
+  display_name: "Merge and Cleanup"
+  short_description: "Squash-merge a reviewed PR and safely finish cleanup"
+policy:
+  allow_implicit_invocation: false

@@ -37,6 +37,7 @@
     "./skills/engineering/codebase-design",
     "./skills/engineering/code-review",
     "./skills/engineering/pr",
+    "./skills/engineering/merge-and-cleanup",
     "./skills/engineering/retro",
     "./skills/engineering/wizard",
     "./skills/productivity/grill-me",
