@@ -1,79 +1,81 @@
 ## What it does
 
-`pr` defines the shape of a pull request body: a **Summary** that shows the change, **Evidence** that it works, and a **Merge Danger** call on how risky it is to land. It is a format reference, not a workflow. It does not push a branch, open the PR, or decide what goes into it. It tells the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) what the body should look like when it writes one.
+`pr` prepares and publishes intended changes, or updates their existing pull request, against the authoritative [spec](https://www.aihero.dev/ai-coding-dictionary/spec). It checks the whole delivery, runs required verification, safely handles the branch and commits, and publishes requirements and evidence a reviewer can use without the authoring conversation.
 
-The summary is a visual, not a paragraph. A default PR body describes the diff in prose. This one picks the **smallest view** that makes the key point clear (pseudocode, a call tree, a component tree, a file tree, a Mermaid diagram, or a shaped diff) and keeps the words around it brief. The reviewer already has the diff open, so the body shows them its shape before they read it.
+It stops at a manual review handoff. Publication does not launch a reviewer, select a review [model](https://www.aihero.dev/ai-coding-dictionary/model), fix findings, or merge. A body-only request produces text without permission to commit, push, or publish.
 
 ## When to reach for it
 
-Type `/pr`, or the agent reaches for it automatically whenever it is writing a PR body.
+Type `/pr`, or the [agent](https://www.aihero.dev/ai-coding-dictionary/agent) reaches for it when you ask to publish changes, open/update a PR, or write its body.
 
 | Your situation | Reach for |
 | --- | --- |
-| A branch is ready and needs a body a reviewer can scan | `pr` |
-| The code is written but nobody has reviewed it yet | [code-review](https://aihero.dev/skills-code-review) first, then `pr` |
-| The PR is open and review comments are coming back | Nothing in this set yet; `pr` only writes the body |
+| Local work is ready to publish | `pr`, with the intended issue or agreed requirements |
+| An existing PR needs new commits or evidence | `pr`, reusing the open PR |
+| You only want draft description text | Ask `pr` for a body only |
+| You want feedback, not publication of the branch | [code-review](https://aihero.dev/skills-code-review) |
 
-## The template
+## Prerequisites
 
-Three sections, in this order:
+Publication needs Git history, authenticated GitHub access, and permission to push to the intended repository. Issue-backed work uses the configured tracker; [setup-matt-pocock-skills](https://aihero.dev/skills-setup-matt-pocock-skills) establishes it. Inline requirements need no issue tracker setup.
 
-- **Summary**: one or more small visuals, each placed next to the short text it supports. Use one, sometimes several, rarely all of them. Keep only the calls, files, props, and boundaries the reviewer needs.
-- **Evidence**: a before and after. A screenshot is the strongest evidence when the change is visual and the [environment](https://www.aihero.dev/ai-coding-dictionary/environment) can take one. Otherwise, use the exact test that failed and now passes, written as pseudocode, or the console output that changed.
-- **Merge Danger**: whether the change is a **one-way door** or a **two-way door**, and its **blast radius**. A two-way door is cheap to reverse; a one-way door (a destructive migration, a public API removal, a hard-to-reverse decision) is not. Blast radius names what could break if the change is wrong: layout shift, consumers of an API, mobile responsiveness.
+## One authoritative spec
 
-The door call is the leading idea. It changes "is this safe to merge?" from a gut feeling into a stated claim the reviewer can disagree with. It also tells them where to spend their [human review](https://www.aihero.dev/ai-coding-dictionary/human-review). Skim a two-way door with a small blast radius, and read a one-way door slowly.
+The spec captures intent, not a description reverse-engineered from code. That prevents the reviewer from checking whether the implementation matches an account of what it already does.
+
+| Requirements available | What the PR carries |
+| --- | --- |
+| An authoritative issue | Its link, not a duplicate of its full requirements |
+| An agreed partial issue delivery | The issue link, agreed slice, and deferred requirements |
+| Approved requirements without a suitable issue | An inline Spec section; no automatic issue creation |
+| Requirements reconstructed from conversation | Your approval before publication |
+
+Faithful formatting of already agreed requirements needs no extra approval. Substantive changes do. Approved issue-backed changes update the issue itself; conflicting sources pause publication rather than introducing a second competing spec.
+
+New descriptions contain **Spec**, optional **Implementation**, **Evidence**, and **Merge Danger**. A small diagram or shaped diff can clarify implementation, but visuals are optional supporting context. Evidence reports actual commands and results. Merge Danger states reversibility (a one-way or two-way door) and blast radius.
+
+## Safety before publication
+
+The scope check includes existing branch commits, not just uncommitted edits. A branch created from the wrong feature branch can carry unrelated history even when its working tree is clean.
+
+- On `main` or the default branch, the skill pauses for a feature-branch name and confirmation before creating it.
+- Unrelated work is preserved, and ambiguous ownership pauses the run.
+- Local-main cleanup is optional, only after preserving work, and needs separate confirmation showing the exact move to the verified remote-tracking tip.
+- Failed or unavailable required verification stops normal committing, pushing, and publication. You may explicitly authorize a draft exception; Evidence records the exception and missing checks.
+- An existing PR is updated without blindly replacing approved requirements or hand-written content. Substantive updates get a concise change comment; no-op reruns do not.
 
 ## Common questions
 
-**Can I trust the agent's own door call?**
+**Does it open the PR for me now?**
 
-Not blindly, and that is the point of stating it. The agent that wrote the change is the one grading it, so be most suspicious when it says "two-way, small blast radius". The diff also often hides whether a change can be reversed. As one user put it, "rolling back a commit won't unsend a batch of emails", and a flagged rollout stays two-way only until the first write lands in the new format. The skill gives the agent a definition (destructive actions and hard-to-reverse decisions are one-way), not a checklist, so check the Merge Danger line most carefully. Two things help: make sure the agent has the [ticket](https://www.aihero.dev/ai-coding-dictionary/ticket) or [spec](https://www.aihero.dev/ai-coding-dictionary/spec) in front of it, not just the diff, and write down the changes your repo always treats as one-way (schema migrations, anything that ships outward or deletes) where the agent will read them before it makes the call.
+Yes. In this fork, `pr` owns publication as well as the description. [implement](https://aihero.dev/skills-implement) still stops with a local commit. You separately choose when to publish and when to review.
 
-**Does it open the PR for me?**
+**Do I have to use `to-spec` first?**
 
-No. `pr` covers only the body. [implement](https://aihero.dev/skills-implement) ends by committing to the current branch. Requests for a skill or option that opens the PR (a `/to-pr`, or `implement` opening a PR instead of committing) are still open proposals. One user's workaround is a one-sentence local override of `implement` that tells it to open a PR. [implement-spec](https://aihero.dev/skills-implement-spec) is the exception: it opens a draft PR when your issue tracker closes work through PRs or when you ask for one. Because `pr` is model-invoked, the agent uses this shape for the body whenever you ask it to open a PR.
+No. A manually authored issue or approved inline requirements work. Reconstructed requirements come from your conversation and need approval; they are not inferred from the diff.
 
-**Won't it just produce another wall of text and diagrams?**
+**What if I have no before-change screenshot or failing test output?**
 
-The skill is designed to prevent that, but it can still happen. Users' complaint about agent PR bodies is consistent: "a long summary but all I need to know is what changed, how it was verified, what could break, and whether it's safe to merge." The skill tells the agent to skip preambles, keep prose brief, and pick the smallest view, usually one visual and rarely all of them. If you still get a stack of diagrams, the agent has ignored that. If the body is huge because the diff is huge, the problem is the size of the PR, and `pr` will not split it for you.
+The skill says so. It reports checks actually run, including failures and limitations, rather than fabricating a before/after story. A passing check is useful evidence even without a captured baseline.
 
-**My repo already has a PR template. Which one wins?**
+**Can it sort through review comments or fix them automatically?**
 
-Neither, by default. `pr` has its own template and does not look for `.github/pull_request_template.md` or anything like it. Several users asked for the skill to use the repo's template. If you do nothing, the agent has two competing instructions for the same document. Settle it in your repo's agent docs, for example by filling the repo template and putting Summary, Evidence and Merge Danger under it.
+No. It updates the PR's intended changes and evidence, then returns its URL and a suggested comprehensive-review request. Choose the model and reasoning level yourself in a fresh reviewing [session](https://www.aihero.dev/ai-coding-dictionary/session). Findings and fixes remain separate decisions.
 
-**Is the output HTML? Why doesn't the Mermaid diagram render?**
+**Can I trust the door call?**
 
-The output is a markdown PR body, not an HTML page. GitHub and GitLab render Mermaid blocks in a PR description, but a terminal does not, so the diagram looks like raw text while the agent is still showing it to you locally. Users on CLI harnesses have worked around that with an ASCII Mermaid renderer or by having the agent attach an HTML version to the PR. Mermaid is one of six views. A call tree, file tree or shaped diff reads the same everywhere.
-
-**Can it sort through the review comments that come back?**
-
-No. It writes the body and stops. Users have asked more than once for a way to triage comments from other developers or review bots (which are worth acting on, which are non-issues). This skill does not do that.
-
-**Does it keep the body up to date as the PR changes?**
-
-No. It writes the body at one point in time, and a PR that changes under review leaves that body stale. Ask the agent to rewrite the body after a large change. The agent is writing a PR body again, so it uses the same shape.
-
-**My change has no UI. What goes in Evidence?**
-
-Everything except the screenshot. The screenshot is the strongest evidence only when the change is visual. For a migration, a background job or a refactor, the evidence is the exact test that failed before and passes now, or the console output that changed. "Tests are green" on its own is a claim, not a before and after.
-
-**Can it mark the body as written by an LLM?**
-
-Not by itself. One user's approach is a standing instruction in the repo's agent docs that every issue, comment, and PR the agent writes ends with a disclosure line. That rule belongs in the repo, where it covers everything the agent posts, rather than in a template for one kind of document.
+Treat it as an assessable claim. Reverting a commit will not unsend emails or necessarily undo a data migration. Read the reversibility and blast-radius explanation, not just the size of the diff.
 
 ## It's working if
 
-- You can tell what the PR changes from the Summary visual alone, before opening the diff.
-- The body has no preamble: it starts at the Summary heading.
-- The Evidence section shows a before and an after, not a claim that tests pass.
-- Every PR states a door and a blast radius, and the one-way doors are the ones you slow down on.
+- The PR points to the agreed requirements without copying an issue's full spec.
+- The scope matches the whole branch delivery, not only the latest edits.
+- Evidence names real checks and their limitations, including any draft exception.
+- Reruns preserve your edits and avoid duplicate PRs or no-op comments.
+- You receive the PR URL and a manual review suggestion, with no reviewer launched or merge performed.
 
 ## Where it fits
 
-`pr` comes between review and retro when the build ships as a pull request: `to-spec → to-tickets → implement → code-review → pr → retro`. It is model-invoked, so it also fires on its own any time the agent writes a PR body outside that chain.
+This is a publication chain step: [implement](https://aihero.dev/skills-implement) produces verified local commits; `pr` publishes when you choose; [code-review](https://aihero.dev/skills-code-review) separately assesses the published work against the authoritative requirements. Both skills also work outside that chain.
 
-- [code-review](https://aihero.dev/skills-code-review) runs before it, because a PR body should describe a diff that has already been reviewed.
-- [implement](https://aihero.dev/skills-implement) produces the commits the body describes.
-
-[ask-matt](https://aihero.dev/skills-ask-matt) routes across the whole set when you are unsure which skill the situation wants.
+[ask-matt](https://aihero.dev/skills-ask-matt) routes across the whole set.

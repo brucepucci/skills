@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Use when writing a PR body."
+description: "Prepare and publish a PR, or update an existing PR, with authoritative requirements, verification evidence, and a manual review handoff. Use when the user asks to publish changes, open/update a PR, or write its body."
 metadata:
   credits:
     skill: show-me
@@ -9,162 +9,69 @@ metadata:
     url: "https://github.com/humanlayer/skills/blob/main/plugins/show-me/skills/show-me/SKILL.md"
 ---
 
-Use this template for writing the PR body:
+Prepare and publish the intended work against the **authoritative spec**, then stop at a manual review handoff. This skill does not review, fix findings, or merge. It does not require `to-spec` or automatically create an issue.
 
-```markdown
-## Summary
+For a request only to write or preview a body, resolve scope and requirements, read [BODY.md](BODY.md), and return prepared text with honest evidence. That request authorizes no branch/history mutations, commits, pushes, or publication. Publication requests follow the full workflow below. Use the user's domain language from `GLOSSARY.md` where available.
 
-<diagram, diff-sketch, or tree>
+## 1. Resolve destination and inspect scope
 
-## Evidence
+Inspect repository instructions, working tree (including staged and untracked changes), current branch, remotes, default branch, and history. Explicitly resolve the intended publication repository and push remote; never assume the skills distribution repository or trust GitHub CLI's fork/upstream inference. Verify the destination and use explicit `--repo OWNER/REPO` or API paths on GitHub operations.
 
-- **Before:** <screenshot/output/failing test run>
-  **After:** <screenshot/output/passing test run>
+Look for the current branch's open PR in that destination before creating one. Reuse it when unambiguous. For an existing PR, use its target branch as the base; for a new one, normally use the intended repository's default branch. Clarify ambiguous repository, remote, base, or PR selection. Network/authentication errors are not evidence that no PR exists.
 
-## Merge Danger
+Fetch the relevant remote refs without overwriting local branches. Inspect the full commit list and complete branch diff against the selected base, as well as uncommitted changes. Check the merge-base and detect truncated output. A clean working tree does not mean the branch contains only intended work. Announce repository, remote, branch, base, existing PR if any, and intended scope. Pause for unrelated existing commits or ambiguous ownership; preserve unrelated work rather than silently including or discarding it.
 
-**Door:** <one-way or two-way>
+## 2. Confirm a feature branch
 
-<optional: description>
+On `main` or the repository's default branch, warn and pause before committing or creating a branch. Suggest a descriptive feature-branch name; let the user accept or replace it and obtain confirmation before creation. Reuse an appropriate existing feature branch; clarify an unsuitable branch rather than silently switching.
 
-**Blast Radius:** <one-word description>
+Preserve intended local commits and uncommitted work on the confirmed feature branch. Never blindly stage all changes, discard unrelated work, amend existing commits, force-push, or rewrite remote default-branch history.
 
-<optional: potential ramifications of merge>
-```
+### Optional local-main cleanup
 
-## Sections
+Only after work is safely preserved, offer cleanup if local main/default-branch history needs restoring. Publishing is not permission to reset main. Fetch and verify its corresponding remote-tracking tip; propose that exact tip, not an assumed last merge. Show the local ref, current SHA, proposed SHA, commits that would leave the ref, and how all work is preserved. Obtain **separate explicit confirmation** before moving the local ref. Leave main untouched if the target, preservation, or ownership is uncertain. Do not reset the user's working tree or alter remote main.
 
-Skip all preambles and keep prose brief. Use the user's domain language from `GLOSSARY.md`.
+## 3. Establish the authoritative spec
 
-### Summary
+Prefer explicitly agreed requirements. Fetch a supplied issue through the configured tracker workflow, including necessary linked parent requirements. If tracker configuration is needed but absent, tell the user to run `/setup-matt-pocock-skills`; a self-contained inline spec needs no tracker setup. Manually authored issues qualify.
 
-Pick the smallest view that makes the key point clear.
+- **Issue-backed:** the PR's Spec section links the authoritative issue rather than copying its requirements. Keep requirements in that issue.
+- **No suitable issue:** include approved inline requirements. Reconstruct missing requirements from the agreed conversation, not the implementation, and ask for approval before publication. If the conversation lacks sufficient intent, ask rather than infer it from code.
+- **Already agreed spec:** faithful formatting needs no extra approval. Substantive changes always do.
+- **Partial issue implementation:** explicitly state the agreed slice and deferred requirements in the description alongside the issue link. Obtain agreement on that scope rather than deriving it from the diff.
 
-- Show logic or an algorithm as pseudocode:
+Keep detail proportional: intended behavior and verifiable acceptance criteria, with constraints and exclusions as applicable. An implementation sketch is supporting context, not requirements. The reviewer must be able to recover intent from published artifacts without this conversation.
 
-```text
-on(save)
-  if content is unchanged
-    return cached result
-  write new content
-  return fresh result
-```
+Compare the full intended delivery with the spec. If they differ, pause for a choice: correct the implementation or approve a substantive requirement change. Never rewrite intent merely to make code pass. Before editing issue-backed requirements, obtain approval, then update the authoritative issue itself. If that is unavailable, pause and agree on an explicit alternative; do not introduce a competing PR-only override. Requirements conflicts block publication. Record approved changes in the PR update history without duplicating the spec.
 
-- Show runtime control flow as a call tree:
+## 4. Verify before committing or publishing
 
-```text
-submitForm
-  createSession
-    persistPrompt
-    launchAgent
-  navigateToSession
-```
+Discover and run the repository's applicable required verification using its actual commands, including tests and typechecking where provided. Record commands, results, failures, unavailable checks, and checks not run. Existing local commits do not waive this gate.
 
-- Show UI structure as a component tree, including state and module boundaries that matter:
+Required verification failure or unavailability stops normal committing, pushing, and publication. The user may **explicitly authorize a draft exception**; record that authorization and all failed, unavailable, or unperformed required checks in Evidence. Never silently convert failure to a draft or claim readiness. Successful verification normally produces a ready-for-review PR.
 
-```text
-<SessionPage> (apps/example/src/routes/session.tsx)
-  useSessionEvents()
-  <SessionToolbar>
-    <RunSkillButton> (packages/ui)
-```
+Use before/after evidence only when it actually exists. Missing baseline output, screenshots, or failing test runs must be disclosed, never reconstructed as if executed.
 
-- Show file responsibility or a broad refactor as a shallow file tree:
+## 5. Prepare the description and intended commits
 
-```text
-src/
-├── commands/       # parses user actions
-├── sessions/       # owns session state
-└── transport/      # sends API requests
-```
+Read [BODY.md](BODY.md) for section format and optional visual guidance. Newly prepared descriptions use **Spec**, optional **Implementation**, **Evidence**, and **Merge Danger** in that order. Respect repository-required content while making these sections discoverable.
 
-- Show component interaction, control flow, or data flow with Mermaid:
+For an existing PR, snapshot its current description and published head before editing or pushing. Preserve approved requirements and hand-written content while refreshing implementation details and verification evidence. Show conflicts and ask before overwriting existing content; do not replace the entire body blindly. Recheck the current remote state before writing if it could have changed.
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant UI
-    participant Daemon
-    User->>UI: choose command
-    UI->>Daemon: send expanded prompt
-    Daemon-->>UI: stream result
-```
+Inspect the final working tree and full branch diff again. Stage only intended changes and commit them on the confirmed feature branch after the verification gate. Reuse intended existing commits rather than amending them or creating an empty commit. Check that the prepared description accurately represents the whole delivery, not only the latest edits.
 
-- Use `diff` when the point is what changes and the surrounding shape already exists. Match the diff shape to the topic.
+## 6. Publish or update once
 
-For a component change:
+Reconfirm repository, remote, branch, base, and PR state before pushing. An authorized draft exception requires a new draft PR or converting the existing PR to draft before pushing updates; pause if draft status cannot be established. Push only the confirmed feature branch to the resolved remote, without force. Create a PR only if there is no matching open one; update the existing one otherwise. Use explicit repository selection, and verify the returned URL and head/base belong to the intended destination. Preserve an existing draft unless the user authorizes marking it ready; disclose its status.
 
-```diff
- <SessionPage>
-   useSessionEvents()
-   <SessionToolbar>
-+    <RunSkillButton />
-   <SessionTimeline>
-+    <SkillResultCard />
-```
+For a substantive existing-PR update, add one concise comment describing changes since the previously published version, relevant new verification, and explicitly approved requirement changes. Compare against the saved published snapshot, not only the latest local commit. No-op reruns need no comment. Inspect the PR, branch, and existing comments before retrying an uncertain write so retries do not duplicate PRs or update comments.
 
-For a file-layout change:
+If a commit, push, or GitHub write fails, report the exact partial state and preserve local work and prepared text. Do not claim publication succeeded or silently change destinations.
 
-```diff
- src/
- ├── commands/
-+│   └── show-me.ts       # expands the slash command
- ├── sessions/
--└── transport.ts
-+└── transport/
-+    ├── client.ts
-+    └── stream.ts
-```
+## 7. Hand off manual review
 
-For a call-tree or call-stack change:
+Return the PR URL, verification summary/limitations, and this suggested next step:
 
-```diff
- submitForm
-   createSession
-     persistPrompt
-+    expandSkillMention
-     launchAgent
--  navigateToSession
-+  navigateToSession
-+    subscribeToEvents
-```
+> In a fresh session, select your review model and reasoning level, then request: `/code-review comprehensive <PR URL>`.
 
-For a state or control-flow change:
-
-```diff
- on(save)
--  write content
-+  if content is unchanged
-+    return cached result
-+  write new content
-+  invalidate cache
-```
-
-- Show the whole block when most of it is new, when omitted context would hide ownership or order, or when the user needs a copyable target shape:
-
-```ts
-function expandSkill(command: string): string {
-  const skillName = command.slice(1);
-  return `use the ${skillName} skill`;
-}
-```
-
-#### Guidance
-
-Place each visual next to the short text it supports. Keep only the calls, files, props, states, and boundaries needed to answer the user's current question or the options to resolve the current discussion point.
-
-You may use one of these, you may use several, it is unlikely you will use all of them. Use your judgement and don't overwhelm the user.
-
-### Evidence
-
-Concrete evidence that the change works. Show a before and after.
-
-Screenshots are S-tier - when the environment is set up for it and the change is visual.
-
-Execution-based evidence is A-tier. Test results, console output. Show the exact test that now fails and passes, using pseudocode.
-
-### Merge Danger
-
-Describe whether it's a one-way or two-way door. You can walk back through two-way doors, but not one-way doors. A PR that is cheap to roll back is lower risk. Changes that involve destructive actions or hard-to-reverse decisions are one-way doors.
-
-The blast radius is the potential impact or scope of the changes introduced by this PR. Consider all possibilities. Examples are layout shift, breakages for consumers, mobile responsiveness, etc.
+Stop here. Do not invoke `code-review`, change model/reasoning, poll for review, apply review fixes, or merge. Review and any follow-up remain user-triggered.
