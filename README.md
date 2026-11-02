@@ -26,7 +26,7 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 [`enabled-skills.json`](./enabled-skills.json) is this fork's explicit selection
 for the [dotfiles configuration](https://github.com/brucepucci/dotfiles). It lists
-27 skill directories, relative to this repository's root. To change the selection,
+28 skill directories, relative to this repository's root. To change the selection,
 add or remove a directory path; an empty array selects none.
 
 Publish and merge content or selection changes to this fork's `main`, then run
