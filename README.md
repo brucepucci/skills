@@ -26,20 +26,45 @@ If you want to keep up with changes to these skills, and any new ones I create, 
 
 [`enabled-skills.json`](./enabled-skills.json) is this fork's explicit selection
 for the [dotfiles configuration](https://github.com/brucepucci/dotfiles). It lists
-28 skill directories, relative to this repository's root. To change the selection,
-add or remove a directory path; an empty array selects none.
+22 active skill directories, relative to this repository's root, and is the sole
+activation authority. [`parked-skills.json`](./parked-skills.json) records six
+personally deselected alternatives in the same path-only format. It is
+informational, not an installer input; the two lists are disjoint and together
+account for the previous 28-skill selection, not every skill in this repository.
+Parking reasons and reconsideration triggers live in
+[issue #3](https://github.com/brucepucci/skills/issues/3).
 
-Publish and merge content or selection changes to this fork's `main`, then run
-`chezmoi apply` and `/reload` in Pi. The dotfiles setup automatically fetches
-remote `main`, including this manifest, and loads selected directories from a
-commit-specific snapshot in `~/.cache/dotfiles/pi-skills/`. Fetch or validation
-failures block apply instead of silently using stale content. Settings previews
-also fetch main, but do not change active skill paths.
+The personal idea-to-ship flow is `grill-me` → `to-spec` → optional `to-tickets`
+→ `implement` → `pr` → comprehensive `code-review` → `merge-and-cleanup`.
+Publication, review, and merging remain separate user choices.
+[`ask-matt`](./skills/engineering/ask-matt/SKILL.md) routes over the active
+selection. `wayfinder`, `improve-codebase-architecture`, `handoff`, `retro`, and
+`wait-what` remain available only by explicit user entry; their supporting calls
+can proceed normally, and model-invoked supporting skills remain independently
+available.
 
-Your development checkout at `~/gh/skills` is never read or modified by apply;
-its local branch and uncommitted changes are not installed. Keep cached snapshots
-unedited. No Skills CLI or package installation is involved in this personal
-workflow. Other agents' installation routes below are unchanged.
+To re-enable a parked skill, move its directory entry from `parked-skills.json`
+into `enabled-skills.json` and check that its required supporting skills are also
+selected. Other selection changes add or remove active directory paths; an empty
+active array selects none. Editing either list does not apply or reload anything.
+
+Apply selection changes separately with `chezmoi apply`, then `/reload` in Pi.
+The existing dotfiles hook reads `~/gh/skills/enabled-skills.json` and reconciles
+symlinks in `~/.agents/skills/` to the selected directories in that local checkout.
+It removes deselected checkout-owned links, preserves unrelated installed skills,
+and fails validation before changing links. It never reads the parked registry.
+
+The current dotfiles setup uses local checkout links, not the former remote-main
+cache snapshots. Apply does not fetch Git changes or install packages. Edits to
+already-linked skill content are visible through the links; reload Pi to pick
+them up. Keep the fork synchronized with Git separately, and publish only when
+you choose. See the [dotfiles skill guide](https://github.com/brucepucci/dotfiles/blob/main/docs/pi.md#global-skills)
+for the existing discovery and migration behavior.
+
+Other agents' installation routes below are unchanged. The broader reference
+sections below include parked skills; they describe the general collection, not
+this personal active selection. Parking leaves skill directories, companion
+files, docs pages, repository buckets, and plugin distribution intact.
 
 ## Installation (30-second setup)
 
