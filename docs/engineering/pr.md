@@ -38,6 +38,8 @@ New descriptions contain **Spec**, optional **Implementation**, **Evidence**, an
 
 The scope check includes existing branch commits, not just uncommitted edits. A branch created from the wrong feature branch can carry unrelated history even when its working tree is clean.
 
+Verification applies to the **candidate tree**, the exact intended contents to publish. Checks run in isolation from excluded local edits, so an unrelated helper cannot make a broken delivery look green. Evidence identifies that tree, the committed/pushed tree must match it, and candidate changes require fresh verification. Your unrelated working files and staged changes stay preserved.
+
 - On `main` or the default branch, the skill pauses for a feature-branch name and confirmation before creating it.
 - Unrelated work is preserved, and ambiguous ownership pauses the run.
 - Local-main cleanup is optional, only after preserving work, and needs separate confirmation showing the exact move to the verified remote-tracking tip.
@@ -58,6 +60,10 @@ No. A manually authored issue or approved inline requirements work. Reconstructe
 
 The skill says so. It reports checks actually run, including failures and limitations, rather than fabricating a before/after story. A passing check is useful evidence even without a captured baseline.
 
+**Why not just run checks in my working directory?**
+
+That directory can contain unrelated tracked or untracked changes that will not be published. A test can pass using one of those files while the intended commit fails without it. Isolated candidate verification checks the delivery instead of the mixed workspace. If the required environment cannot be prepared faithfully, the skill reports verification as unavailable rather than claiming a pass.
+
 **Can it sort through review comments or fix them automatically?**
 
 No. It updates the PR's intended changes and evidence, then returns its URL and a suggested comprehensive-review request. Choose the model and reasoning level yourself in a fresh reviewing [session](https://www.aihero.dev/ai-coding-dictionary/session). Findings and fixes remain separate decisions.
@@ -70,7 +76,7 @@ Treat it as an assessable claim. Reverting a commit will not unsend emails or ne
 
 - The PR points to the agreed requirements without copying an issue's full spec.
 - The scope matches the whole branch delivery, not only the latest edits.
-- Evidence names real checks and their limitations, including any draft exception.
+- Evidence identifies the checked candidate tree, real checks, and their limitations, including any draft exception.
 - Reruns preserve your edits and avoid duplicate PRs or no-op comments.
 - You receive the PR URL and a manual review suggestion, with no reviewer launched or merge performed.
 
