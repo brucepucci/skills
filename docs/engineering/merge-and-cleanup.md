@@ -32,7 +32,7 @@ Invocation authorizes the resolved safe happy path without another routine confi
 | Dirty checkout, in-progress operation, or unsafe default-branch update | Stops before merging and preserves your work |
 | Source branch has extra commits, is protected/default, or is used by another worktree | Preserves that branch and reports incomplete cleanup |
 | Another contributor owns the source fork | Asks for separate remote-deletion authorization |
-| An issue is mentioned but not authorized as fully complete | Leaves it open; partial delivery conflicting with a closing relationship requires consultation before merging |
+| An issue is mentioned but not authorized as fully complete | Leaves it open; native or squash-message references that would close partial or unauthorized work require consultation before merging |
 
 A review override does not waive GitHub checks or protections. New commits, newly discovered blockers, or detectable changes to reviewed requirements require a new decision. The skill never launches review or fixes findings for you.
 
@@ -46,6 +46,10 @@ Cleanup requires the branch tip to equal the recorded merged PR head exactly. Ex
 
 It can remove the source branch during merging, before verified delivery and exact-tip/ownership checks. The skill requires automatic deletion to be verified disabled both during preflight and immediately before merging. For a fork PR, the fork's setting matters, not the base repository's. It never changes that setting for you.
 
+**Can a PR title or commit message close an issue that is meant to stay open?**
+
+Yes. GitHub can put closing keywords from those inputs into the squash commit even when the PR has no native closing links. The skill inspects the exact squash title/body and their configured inputs, checks each closing destination against the issue plan, and sends that inspected text explicitly when merging. Partial or unauthorized closure stops for your decision; it never silently removes keywords to get through.
+
 **What happens when the merge works but cleanup fails?**
 
 The merge remains intact. Independent safe, already-authorized steps can finish, and the report lists what failed or remains. A rerun checks actual state and existing issue comments before retrying, rather than merging again or duplicating completion comments.
@@ -55,6 +59,7 @@ The merge remains intact. Independent safe, already-authorized steps can finish,
 - Before mutation, you see the exact PR, source fork/branch, target, head, default branch, and intended issue outcomes.
 - A review shortcoming produces an explicit override decision rather than a surprise merge or an automatic reviewer.
 - Additional commits and other worktrees remain untouched, even when cleanup cannot finish.
+- Before merging, you see the squash title/body and any closing-reference conflict, including one found only in the title or source commit text.
 - Fully completed, authorized issues get one short completion comment linking the PR and merge commit; incidental mentions stay open.
 - The final report names retained branches and failures, and shows the actual checkout/update state. A non-default target is never presented as default-branch delivery.
 
