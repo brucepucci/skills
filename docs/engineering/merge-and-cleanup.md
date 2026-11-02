@@ -28,6 +28,7 @@ Invocation authorizes the resolved safe happy path without another routine confi
 | --- | --- |
 | Missing, stale, focused, incomplete, untrusted, or blocking assessment | You see the exact shortcomings and choose whether to override them for the shown head |
 | Failed or pending required checks, conflicts, drafts, or unmet protections | Stops without bypassing protections, waiting, scheduling auto-merge, or substituting a merge method |
+| Source repository's automatic head-branch deletion is enabled or cannot be verified disabled | Stops before merging without changing settings, so deletion stays behind the verified-delivery safeguards |
 | Dirty checkout, in-progress operation, or unsafe default-branch update | Stops before merging and preserves your work |
 | Source branch has extra commits, is protected/default, or is used by another worktree | Preserves that branch and reports incomplete cleanup |
 | Another contributor owns the source fork | Asks for separate remote-deletion authorization |
@@ -40,6 +41,10 @@ A review override does not waive GitHub checks or protections. New commits, newl
 **Will a squash merge erase commits that exist only on my local branch?**
 
 Cleanup requires the branch tip to equal the recorded merged PR head exactly. Extra local or remote commits stay preserved. An exact-tip branch can be deleted after verified delivery even when Git's ordinary ancestry check rejects deletion after a squash merge.
+
+**Why does GitHub's automatic branch deletion block this workflow?**
+
+It can remove the source branch during merging, before verified delivery and exact-tip/ownership checks. The skill requires automatic deletion to be verified disabled both during preflight and immediately before merging. For a fork PR, the fork's setting matters, not the base repository's. It never changes that setting for you.
 
 **What happens when the merge works but cleanup fails?**
 

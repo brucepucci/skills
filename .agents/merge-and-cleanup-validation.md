@@ -43,6 +43,35 @@ All 18 acceptance scenarios were manually walked through against the finished in
 - `scripts/link-skills.sh`: passed; the new skill is linked into `~/.claude/skills` and `~/.agents/skills`.
 - `claude plugin validate . --strict`: **failed** because the existing root `CLAUDE.md` warning is an error in strict mode. It also reports the existing missing-icon advisory, which the validator says does not change the directory-check result. The identical output/failure was reproduced in an unchanged `HEAD` archive under `/tmp/skills-issue-10.MFXZ0N/baseline`. Those unrelated baseline issues were not changed.
 
+## PR #11 requested-change walkthroughs
+
+Addressed [the blocking automatic-deletion finding](https://github.com/brucepucci/skills/pull/11#discussion_r4438544501) within issue #10's existing verify-before-delete, exact-tip, and fork-authorization requirements. No authoritative requirements changed. [GitHub's documentation](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-the-automatic-deletion-of-branches) confirms that fork PRs use the head repository's setting and automatic deletion requires the merger to have write access there.
+
+The following paths were manually walked through against PRE-MERGE's readiness gate and SKILL step 3. These are instruction-level checks, not automated behavioral tests or live GitHub execution.
+
+| Condition | Decision path and externally visible outcome |
+| --- | --- |
+| Same repository; automatic deletion verified `false` | Readiness records the explicit source identity/setting. The gate passes; all other review/readiness/local requirements still apply, followed by verified merge and separate cleanup proofs. |
+| Same repository; automatic deletion enabled | Readiness stops before merging and explains that server-side deletion would bypass the cleanup gate. Omitting a deletion flag or using the immediate API is not treated as disabling the setting. No settings change occurs. |
+| Base disabled; contributor's fork enabled; merger has fork write access but no separate deletion authorization | The explicit head-repository lookup finds the fork's enabled setting and stops before merging. Base metadata, merge permission, and a review override cannot authorize the automatic deletion. Separate fork-deletion authorization would still not waive verified-merge/exact-tip sequencing. |
+| Base enabled; source fork disabled | The source fork's verified `false`, not the base setting, settles this gate. Other preflight requirements remain binding; cleanup still checks exact tips and fork-deletion authorization separately. |
+| Source setting enabled but merger lacks fork write access | The conservative gate still stops and explains the incompatible setting rather than relying on permission state to prevent automatic deletion. |
+| Source metadata inaccessible, missing the setting, or otherwise unknown | Failed discovery never becomes `false`. Readiness stops for consultation without merging or changing settings. |
+| Setting changes from disabled to enabled, or becomes unverifiable, after initial preflight | SKILL step 3 explicitly re-fetches and reapplies the source setting gate immediately before mutation. The merge stops despite the earlier passing snapshot. A changed source identity also stops for a refreshed plan. |
+| Already-merged PR, including one with an already-removed source branch | SKILL step 1 still enters verified cleanup-only recovery without a new merge or retroactive preflight. Missing refs are already-clean outcomes; remaining refs still need CLEANUP's independent safety proofs. |
+
+Router guidance was re-read and remains accurate: this fix changes a readiness safeguard, not the skill's role or invocation boundary. Human docs now explain the stop and the fork/base distinction. Git mechanism instructions and invocation/distribution metadata are unchanged.
+
+### Checks executed for the requested change
+
+- `npm run check-plugin-version`: passed (1.3.2).
+- `ruby /tmp/skills-pr-11-fix.93nKBD/check-metadata.rb`: passed repository JSON/YAML, exact 28-skill promoted plugin set, paired invocation, discovery/docs, router/changeset, prose, and local reference checks. This is a temporary check, not new repository infrastructure.
+- The first metadata run additionally asserted external harness symlinks and failed because `~/.agents/skills/merge-and-cleanup` is absent; the Claude link exists. The rerun excludes external installation assertions. No skill was added/renamed/removed in this revision, so `scripts/link-skills.sh` was not rerun and personal harness state was left unchanged. The earlier implementation's linking evidence above is historical, not a claim that both links still exist.
+- `git diff --check` and `git diff 753c84fda08650fef86e0b3150af0c0dc3b674f5 --check`: passed.
+- `claude plugin validate . --strict`: failed on the existing root `CLAUDE.md` warning, with the existing missing-icon advisory. Reproduced the same failure by running the command in an unchanged `30e11403ebd82d2f22cfdd3ef7ecf34185b6370e` archive at `/tmp/skills-pr-11-fix.93nKBD/baseline`.
+- Re-fetched authoritative issue #10 before committing; its requirements and update timestamp were unchanged. No spec edit was needed.
+- Git mechanism fixtures were not rerun because their instructions did not change. No live merge/deletion, repository-setting mutation, end-to-end agent evaluation, deployed-docs check, or PR review was run. No test/typecheck script exists; TDD does not apply to this instruction-only change at the approved seams. Repository settings can still change after the immediate read; this is not an atomic GitHub settings/merge transaction.
+
 ## Coverage limits and scope choices
 
 - Instruction walkthroughs are not end-to-end agent compliance tests. Local fixtures establish Git mechanisms, not review interpretation, GitHub authorization behavior, API races, or issue completion behavior in a live run.
