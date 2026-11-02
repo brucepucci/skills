@@ -1,6 +1,6 @@
 # merge-and-cleanup validation
 
-Scope: [brucepucci/skills#10](https://github.com/brucepucci/skills/issues/10). This is a validation record, not an executable evaluation suite. The implementation is instructions plus existing Git and `gh` tools; no runtime code, dependencies, hooks, framework, or testing infrastructure was added.
+Scope: [brucepucci/skills#10](https://github.com/brucepucci/skills/issues/10). This is a historical validation record, not an executable evaluation suite. Issue-identification and delivery-evidence expectations below are superseded by [issue #16's validation](./implementation-issue-closeout-validation.md); the Git-preservation and squash-message mechanism evidence remains relevant. The implementation is instructions plus existing Git and `gh` tools; no runtime code, dependencies, hooks, framework, or testing infrastructure was added.
 
 ## Scenario walkthroughs
 
