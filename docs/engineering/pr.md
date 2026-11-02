@@ -40,8 +40,11 @@ The scope check includes existing branch commits, not just uncommitted edits. A 
 
 Verification applies to the **candidate tree**, the exact intended contents to publish. Checks run in isolation from excluded local edits, so an unrelated helper cannot make a broken delivery look green. Evidence identifies that tree, the committed/pushed tree must match it, and candidate changes require fresh verification. Your unrelated working files and staged changes stay preserved.
 
-- On `main` or the default branch, the skill pauses for a feature-branch name and confirmation before creating it.
-- Unrelated work is preserved, and ambiguous ownership pauses the run.
+- On `main` or the default branch, the skill suggests a purpose-based name and pauses for your confirmation before creating it. This differs from `implement`'s automatic safe local creation.
+- An explicit name or established repository convention takes precedence. Otherwise issue-backed suggestions look like `feat/issue-8-branch-names`: a suitable purpose prefix, recognizable issue identifier, and very short description with title boilerplate removed. Other configured trackers retain their lowercase issue key; inline requirements need no invented identifier.
+- Generated names follow [Conventional Branch](https://conventionalbranch.org/) and Git naming rules. Ordinary fixes use `fix/`, maintenance uses `chore/`, and urgent fixes or release preparation use `hotfix/` or `release/` only when warranted.
+- Suitable existing branches are reused without cosmetic renaming. Collisions, obvious naming mismatches, ambiguous choices, or unsafe state produce an explanation and a pause, not silent renaming or suffixing.
+- Unrelated work and history are preserved without automatic stashing, resetting, or forced switching; ambiguous ownership pauses the run.
 - Local-main cleanup is optional, only after preserving work, and needs separate confirmation showing the exact move to the verified remote-tracking tip.
 - Failed or unavailable required verification stops normal committing, pushing, and publication. You may explicitly authorize a draft exception; Evidence records the exception and missing checks.
 - An existing PR is updated without blindly replacing approved requirements or hand-written content. Substantive updates get a concise change comment; no-op reruns do not.
@@ -51,6 +54,10 @@ Verification applies to the **candidate tree**, the exact intended contents to p
 **Does it open the PR for me now?**
 
 Yes. In this fork, `pr` owns publication as well as the description. [implement](https://aihero.dev/skills-implement) still stops with a local commit. You separately choose when to publish and when to review.
+
+**Will publishing rename my existing branch?**
+
+Not merely to match the default naming style. A suitable branch is reused. An obviously unrelated name is explained and a suitable alternative proposed for your decision. Creation from `main` or the default branch still needs your explicit confirmation.
 
 **Do I have to use `to-spec` first?**
 
@@ -76,6 +83,7 @@ Treat it as an assessable claim. Reverting a commit will not unsend emails or ne
 
 - The PR points to the agreed requirements without copying an issue's full spec.
 - The scope matches the whole branch delivery, not only the latest edits.
+- New branch suggestions describe the purpose and issue, creation waits for your confirmation, and suitable existing branches stay named as they are.
 - Evidence identifies the checked candidate tree, real checks, and their limitations, including any draft exception.
 - Reruns preserve your edits and avoid duplicate PRs or no-op comments.
 - You receive the PR URL and a manual review suggestion, with no reviewer launched or merge performed.

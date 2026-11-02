@@ -1,6 +1,6 @@
 ## What it does
 
-`implement` turns one selected issue into verified work and a local commit. It requires a durable, adequate [spec](https://www.aihero.dev/ai-coding-dictionary/spec) in the configured issue tracker, not just a plan in the conversation. It fetches and announces the issue, checks the requirements, and works on a confirmed feature branch.
+`implement` turns one selected issue into verified work and a local commit. It requires a durable, adequate [spec](https://www.aihero.dev/ai-coding-dictionary/spec) in the configured issue tracker, not just a plan in the conversation. It fetches and announces the issue, checks the requirements, and works on a suitable feature branch. Once requirements and testing decisions are settled, it announces and safely creates a local branch from `main` or the default branch without another routine approval.
 
 The run ends with an issue handoff, not publication or review. It leaves the issue open and never automatically pushes, opens or updates a PR, runs [code-review](https://aihero.dev/skills-code-review), or fixes review findings.
 
@@ -35,13 +35,26 @@ Requirements are fetched again before the final commit and handoff. Material cha
 
 | Checkpoint | What you see |
 | --- | --- |
-| Starting on `main` or the default branch | A warning and a suggested feature-branch name for you to accept or replace before changes begin |
-| Already on a suitable selected feature branch | That branch is reused; unrelated work stays intact and outside the commit |
+| Starting on `main` or the default branch | After requirements and testing are settled, an announced branch name and automatic safe local creation before implementation |
+| Already on a suitable feature branch | That branch is reused, even with a different naming style; unrelated work stays intact and outside the commit |
+| Explicitly requested branch name | Your name is honored, subject to validity, collision, obvious-mismatch, and safety checks |
+| Collision, obviously unrelated branch, ambiguity, or unsafe state | An explanation and a pause for your decision, not an arbitrary suffix, silent rename, stash, or history rewrite |
 | Verification | Applicable repository checks, with actual commands, results, and limitations rather than assumed success |
 | Handoff | A local commit and an issue comment naming the branch, SHA, verification, and limitations, explicitly marked unpushed |
 | Publication and review | Separate decisions you make after implementation; neither runs automatically |
 
 ## Common questions
+
+**Will it ask me to approve a branch name?**
+
+Not for routine safe creation from `main` or the default branch. Your implementation request authorizes that once requirements and testing decisions are settled. Collisions, obvious naming mismatches, ambiguous choices, and unsafe state still pause. [pr](https://aihero.dev/skills-pr) retains its separate confirmation before branch creation.
+
+**What names does it choose?**
+
+- Your explicit name wins, subject to safety checks; an established repository convention overrides the generated default.
+- Otherwise it uses a purpose prefix, issue identifier, and very short description, such as `feat/issue-8-branch-names`. Fixes normally use `fix/`, maintenance uses `chore/`, and urgent fixes or releases use `hotfix/` or `release/` only when warranted.
+- Other configured trackers retain a recognizable lowercase issue key. Title boilerplate such as "To do" is dropped, and generated names follow [Conventional Branch](https://conventionalbranch.org/) and Git naming rules.
+- A suitable existing branch is reused without cosmetic renaming.
 
 **Does my issue have to come from `to-spec`?**
 
@@ -67,7 +80,8 @@ No. One invocation covers one explicitly selected issue. Missing selection produ
 
 - The announced issue identity and repository match the work you selected.
 - Material spec gaps stop work until approved corrections reach the authoritative issue, with an explanatory comment.
-- Work begins only on a confirmed feature branch, and unrelated changes remain untouched.
+- From the default branch, safe local branch creation is announced and proceeds without a routine approval round; implementation waits for settled requirements and testing.
+- Suitable existing branches, unrelated changes, and local commits remain intact; collisions and unsafe choices pause instead of triggering silent recovery.
 - Verification results name the actual commands and distinguish passed checks from unavailable or unrun checks.
 - The issue receives a local-only branch/commit handoff and stays open, with no automatic push, PR, or review.
 
